@@ -1,0 +1,106 @@
+### Service1_AddUser
+POST http://localhost:8123/FAPServer/service/fapservice/addUser
+Accept: application/json
+Content-Type: application/json
+
+{
+    "loginName": "peterl",
+    "passwort": {
+        "passwort": "geheim"
+    },
+    "vorname": "Peter",
+    "nachname": "Lustig",
+    "strasse": "Akazienweg 13",
+    "plz": "46397",
+    "ort": "Bocholt",
+    "land": "Deutschland",
+    "telefon": "02871/4711007",
+    "email": {
+        "adresse": "peterl@test.de"
+    }
+}
+
+### Service2_CheckLoginName_NOK
+GET http://localhost:8123/FAPServer/service/fapservice/checkLoginName?id=pet
+
+
+### Service2_CheckLoginName_OK
+GET http://localhost:8123/FAPServer/service/fapservice/checkLoginName?id=peter
+
+
+### Service3_GetOrtDirekt TODO: Eigener Account
+GET http://api.geonames.org/postalCodeSearchJSON?postalcode=46397&username=demo
+
+
+### Service3_GetOrtIndirekt
+GET http://localhost:8123/FAPServer/service/fapservice/getOrt?postalcode=46397&username=demo
+
+
+### Service4_Login
+POST http://localhost:8123/FAPServer/service/fapservice/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "loginName": "tester",
+    "passwort": {
+        "passwort": "tester"
+    }
+}
+
+
+### Service5_Logout
+POST http://localhost:8123/FAPServer/service/fapservice/logout
+Accept: application/json
+Content-Type: application/json
+
+{
+    "loginName": "tester",
+    "sitzung": "98d2db88-c87f-4352-810a-c3524969be99"
+}
+
+### Service6_SetStandort
+PUT http://localhost:8123/FAPServer/service/fapservice/setStandort
+Accept: application/json
+Content-Type: application/json
+
+{
+    "loginName": "tester",
+    "sitzung": "ac7f5f1f-0685-4786-a5cc-26f798e90746",
+    "standort": {
+        "breitengrad": 11,
+        "laengengrad": 10
+    }
+}
+
+
+### Service7_GetStandort
+GET http://localhost:8123/FAPServer/service/fapservice/getStandort?login=tester&session=ac7f5f1f-0685-4786-a5cc-26f798e90746&id=tester
+Accept: application/json
+Content-Type: application/json
+
+{
+    "loginName": "tester",
+    "sitzung": "ac7f5f1f-0685-4786-a5cc-26f798e90746",
+    "standort": {
+        "breitengrad": 11,
+        "laengengrad": 10
+    }
+}
+
+
+### Service8_GetBenutzer
+GET http://localhost:8123/FAPServer/service/fapservice/getBenutzer?login=tester&session=ac7f5f1f-0685-4786-a5cc-26f798e90746
+
+{
+    "loginName": "tester",
+    "sitzung": "ac7f5f1f-0685-4786-a5cc-26f798e90746",
+    "standort": {
+        "breitengrad": 11,
+        "laengengrad": 10
+    }
+}
+
+
+### Service9_GetStandortPerAdresse
+GET http://localhost:8123/FAPServer/service/fapservice/getStandortPerAdresse?land=Deutschland&plz=46397&ort=Bocholt&strasse=Münsterstrasse 265

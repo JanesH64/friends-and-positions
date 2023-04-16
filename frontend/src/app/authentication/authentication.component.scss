@@ -1,0 +1,38 @@
+.form-field {
+    margin: 20px;
+    flex-grow: 100;
+}
+
+.logo {
+    width: 2rem;
+}
+
+.auth-container {
+    padding-top: 20px;
+    height: 80%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.authentication-card {
+    padding: 16px;
+    width: 80%;
+    height: fit-content;
+    max-height: 100%;
+}
+
+.registration-input {
+    padding-top: 8px;
+    margin-bottom: 16px;
+    height: 40vh;
+    overflow-y: scroll;
+    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.registration-input > * {
+    flex: 1 1 400px;
+}

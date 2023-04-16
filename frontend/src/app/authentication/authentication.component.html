@@ -1,0 +1,91 @@
+<div class="auth-container">
+    <mat-card class="authentication-card">
+        <div class="">
+            <mat-tab-group mat-stretch-tabs class="stretched-tabs">
+                <mat-tab label="Login">
+                    <form [formGroup]="loginForm" class="flex-container form-field">
+                        <div class="flex-container headline-container">
+                            <img class="logo" src="../../assets/fap-logo.png">
+                            <h2>LOGIN</h2>
+                        </div>
+
+                        <mat-form-field class="full-width" appearance="outline">
+                            <mat-label>Username</mat-label>
+                            <input matInput formControlName="username">
+                        </mat-form-field>
+
+                        <mat-form-field class="full-width" appearance="outline">
+                            <mat-label>Password</mat-label>
+                            <input type="password" matInput formControlName="password">
+                        </mat-form-field>
+                        <button (click)="callLogin()" mat-raised-button color="#FF655B" color="primary">Log in</button>
+                    </form>
+                </mat-tab>
+
+                <mat-tab label="Register">
+                    <form [formGroup]="registrationForm" class="flex-container form-field">
+                        <div class="flex-container">
+                            <img class="logo" src="../../assets/fap-logo.png">
+                            <h2>CREATE ACCOUNT</h2>
+                        </div>
+
+                        <div class="registration-input">
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>First name</mat-label>
+                                <input matInput formControlName="firstname">
+                            </mat-form-field>
+
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Name</mat-label>
+                                <input matInput formControlName="name">
+                            </mat-form-field>
+
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Username</mat-label>
+                                <input matInput formControlName="username">
+                            </mat-form-field>
+
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Password</mat-label>
+                                <input type="password" matInput formControlName="password">
+                            </mat-form-field>
+
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Retype password</mat-label>
+                                <input type="password" matInput formControlName="password">
+                            </mat-form-field>
+
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Postalcode</mat-label>
+                                <input matInput formControlName="postalcode">
+                            </mat-form-field>
+
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>City</mat-label>
+                                <input matInput formControlName="city">
+                            </mat-form-field>
+
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Street</mat-label>
+                                <input matInput formControlName="street">
+                            </mat-form-field>
+
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Country</mat-label>
+                                <input type="password" matInput formControlName="country">
+                            </mat-form-field>
+
+                            <mat-form-field class="full-width" appearance="outline">
+                                <mat-label>Mail</mat-label>
+                                <input type="password" matInput formControlName="mail">
+                            </mat-form-field>
+                        </div>
+
+
+                        <button (click)="callRegister()" mat-raised-button color="primary">Register</button>
+                    </form>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </mat-card>
+</div>

@@ -1,6 +1,0 @@
-version: '3'
-services:
-  backend:
-    build: .
-    ports:
-      - 8123:8080

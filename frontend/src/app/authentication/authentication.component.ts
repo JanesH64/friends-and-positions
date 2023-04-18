@@ -1,21 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { User } from '../models/user';
 import { AuthenticationService } from './authentication.service';
 import { Registration } from '../models/registration';
+import { Router } from '@angular/router';
+import { DataService } from '../common/data/data.service';
+import { NotificationService } from '../common/notification/notification.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-authentication',
   templateUrl: './authentication.component.html',
   styleUrls: ['./authentication.component.scss']
 })
-export class AuthenticationComponent {
-
-  constructor(
-    private formBuilder: FormBuilder,
-    private authenticationService: AuthenticationService) {
-  }
-
+export class AuthenticationComponent implements OnInit {
   registrationForm = this.formBuilder.group({
     username: '',
     password: '',
@@ -34,6 +32,28 @@ export class AuthenticationComponent {
     password: ''
   });
 
+  isUsernameAvailable: boolean | undefined = undefined
+  private debounce = 300;
+
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private authenticationService: AuthenticationService,
+    private router: Router,
+    private dataService: DataService,
+    private notificationService: NotificationService) {
+  }
+  ngOnInit(): void {
+    this.registrationForm.get('username')?.valueChanges.pipe(debounceTime(this.debounce), distinctUntilChanged())
+    .subscribe(username => {
+      if(!username) {
+        return;
+      }
+
+      this.onUsernameEntered(username);
+    });
+  }
+
   callLogin() {
     let user: User = {
       loginName: this.loginForm.controls["username"].value,
@@ -44,13 +64,22 @@ export class AuthenticationComponent {
 
     this.authenticationService.login(user).subscribe((response) => {
       if (!response.sessionID) {
-        console.error("Login failed!");
+        this.notificationService.error("Login failed!");
         return;
       }
 
-      console.log("Success");
+      
+      user.session = response.sessionID;
+      this.dataService.user = user;
+
+      this.notificationService.success("Login successful!");
+      this.router.navigateByUrl('/');
+    },
+    (error) => {
+      this.notificationService.error("Login failed!");
     });
   }
+
   callRegister() {
     let user: Registration = {
       loginName: this.registrationForm.controls["username"].value,
@@ -71,13 +100,20 @@ export class AuthenticationComponent {
 
     this.authenticationService.addUser(user).subscribe((response) => {
       if (!response.ergebnis) {
-        console.error(response.meldung);
+        this.notificationService.error(response.meldung);
         return;
       }
 
-      console.log("Success");
+      this.notificationService.success("Registration successful!");
+    },
+    (error) => {
+      this.notificationService.error("Registration failed!");
     });
   }
 
-
+  onUsernameEntered(username: string) {
+    this.authenticationService.checkUsername(username).subscribe((response) => {
+      this.isUsernameAvailable = response.ergebnis;
+    })
+  }
 }

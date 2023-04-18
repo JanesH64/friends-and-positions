@@ -15,12 +15,16 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatDialogModule} from '@angular/material/dialog';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthenticationComponent,
-    NavMenuComponent
+    NavMenuComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +38,9 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
     MatCardModule,
     MatIconModule,
     ReactiveFormsModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatSnackBarModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

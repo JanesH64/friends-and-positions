@@ -78,3 +78,13 @@ body {
 .flex-row {
   flex-direction: row;
 }
+
+.success-snackbar {
+  --mdc-snackbar-container-color: rgb(60, 197, 42);
+  --mat-mdc-snack-bar-button-color: white;
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: rgb(217, 32, 32);
+  --mat-mdc-snack-bar-button-color: white;
+}

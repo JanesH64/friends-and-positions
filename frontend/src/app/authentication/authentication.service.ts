@@ -22,4 +22,8 @@ export class AuthenticationService {
   login(user: User): Observable<Session> {
     return this.httpClient.post<Session>("/api/login", user);
   }
+
+  checkUsername(username: string) {
+    return this.httpClient.get<ApiResponse>(`/api/checkLoginName?id=${username}`);
+  }
 }

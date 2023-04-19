@@ -26,4 +26,8 @@ export class AuthenticationService {
   checkUsername(username: string) {
     return this.httpClient.get<ApiResponse>(`/api/checkLoginName?id=${username}`);
   }
+
+  getCityFromPostcode(postcode: string) {
+    return this.httpClient.get<ApiResponse>(`/api/getOrt?postalcode=${postcode}&username=advancedinternettech`);
+  }
 }

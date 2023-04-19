@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { User } from '../models/user';
 import { AuthenticationService } from './authentication.service';
 import { Registration } from '../models/registration';
@@ -15,21 +15,48 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 })
 export class AuthenticationComponent implements OnInit {
   registrationForm = this.formBuilder.group({
-    username: '',
-    password: '',
-    firstname: '',
-    name: '',
-    postcode: '',
-    city: '',
-    street: '',
-    country: '',
-    mail: '',
-    telephone: ''
+    username: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4)
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4)
+    ]),
+    firstname: new FormControl('', [
+      Validators.required,
+    ]),
+    name: new FormControl('', [
+      Validators.required,
+    ]),
+    postcode: new FormControl('', [
+      Validators.required,
+    ]),
+    city: new FormControl('', [
+      Validators.required,
+    ]),
+    street: new FormControl('', [
+      Validators.required,
+    ]),
+    country: new FormControl('', [
+      Validators.required,
+    ]),
+    mail: new FormControl('', [
+      Validators.required,
+      Validators.email
+    ]),
+    telephone: new FormControl('', [
+      Validators.required,
+    ])
   });
 
   loginForm = this.formBuilder.group({
-    username: '',
-    password: ''
+    username: new FormControl('', [
+      Validators.required,
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+    ]),
   });
 
   isUsernameAvailable: boolean | undefined = undefined
@@ -114,6 +141,7 @@ export class AuthenticationComponent implements OnInit {
   onUsernameEntered(username: string) {
     this.authenticationService.checkUsername(username).subscribe((response) => {
       this.isUsernameAvailable = response.ergebnis;
+      
     })
   }
 }

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { DataService } from '../common/data/data.service';
 import { NotificationService } from '../common/notification/notification.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ReCaptchaV3Service } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-authentication',
@@ -59,8 +60,10 @@ export class AuthenticationComponent implements OnInit {
     ]),
   });
 
-  isUsernameAvailable: boolean | undefined = undefined
+  isUsernameAvailable: boolean | undefined = undefined;
+  authenticationInProgress = false;
   private debounce = 300;
+
 
 
   constructor(
@@ -68,55 +71,82 @@ export class AuthenticationComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private router: Router,
     private dataService: DataService,
-    private notificationService: NotificationService) {
+    private notificationService: NotificationService,
+    private recaptchaV3Service: ReCaptchaV3Service) {
   }
   ngOnInit(): void {
     this.registrationForm.get('username')?.valueChanges.pipe(debounceTime(this.debounce), distinctUntilChanged())
-    .subscribe(username => {
-      if(!username) {
-        return;
-      }
+      .subscribe(username => {
+        if (!username) {
+          return;
+        }
 
-      this.onUsernameEntered(username);
-    });
+        this.onUsernameEntered(username);
+      });
 
     this.registrationForm.get('postalcode')?.valueChanges.pipe(debounceTime(this.debounce), distinctUntilChanged())
-    .subscribe(postalCode => {
-      if(!postalCode) {
-        return;
-      }
+      .subscribe(postalCode => {
+        if (!postalCode) {
+          return;
+        }
 
-      this.onPostalCodeEntered(postalCode);
-    });
+        this.onPostalCodeEntered(postalCode);
+      });
   }
 
   callLogin() {
+    this.authenticationInProgress = true;
+
     let user: User = {
       loginName: this.loginForm.controls["username"].value,
-      passwort: { 
-        passwort: this.loginForm.controls["password"].value 
+      passwort: {
+        passwort: this.loginForm.controls["password"].value
       },
     };
 
-    this.authenticationService.login(user).subscribe((response) => {
-      if (!response.sessionID) {
-        this.notificationService.error("Login failed!");
-        return;
-      }
+    this.recaptchaV3Service.execute('importantAction')
+      .subscribe({
+        next: (token: string) => {
+          if (!token) {
+            this.notificationService.error("Login is for humans only!");
+          }
 
-      
-      user.session = response.sessionID;
-      this.dataService.user = user;
+          this.authenticationService.login(user).subscribe(
+            {
+              next: (response) => {
+                if (!response.sessionID) {
+                  this.notificationService.error("Login failed!");
+                  return;
+                }
 
-      this.notificationService.success("Login successful!");
-      this.router.navigateByUrl('/');
-    },
-    (error) => {
-      this.notificationService.error("Login failed!");
-    });
+
+                user.session = response.sessionID;
+                this.dataService.user = user;
+
+                setTimeout(() => {
+                  this.authenticationInProgress = false;
+                  this.notificationService.success("Login successful!");
+                  this.router.navigateByUrl('/');
+                }, 1500);
+              },
+              error: (error) => {
+                setTimeout(() => {
+                  this.authenticationInProgress = false;
+                  this.notificationService.error("Login failed!");
+                }, 1500);
+              }
+            });
+        },
+        error: (error) => {
+          setTimeout(() => {
+            this.authenticationInProgress = false;
+            this.notificationService.error("Registration is for humans only!");
+          }, 1500);
+        }
+      });
   }
 
-  callRegister() {
+  async callRegister() {
     let user: Registration = {
       loginName: this.registrationForm.controls["username"].value,
       passwort: {
@@ -134,29 +164,54 @@ export class AuthenticationComponent implements OnInit {
       }
     };
 
-    this.authenticationService.addUser(user).subscribe((response) => {
-      if (!response.ergebnis) {
-        this.notificationService.error(response.meldung);
-        return;
-      }
+    this.authenticationInProgress = true;
 
-      this.notificationService.success("Registration successful!");
-    },
-    (error) => {
-      this.notificationService.error("Registration failed!");
-    });
+    this.recaptchaV3Service.execute('importantAction')
+      .subscribe({
+        next: (token: string) => {
+          if (!token) {
+            this.notificationService.error("Registration is for humans only!");
+          }
+
+          this.authenticationService.addUser(user).subscribe({
+            next: (response) => {
+              if (!response.ergebnis) {
+                this.notificationService.error(response.meldung);
+                return;
+              }
+
+              setTimeout(() => {
+                this.authenticationInProgress = false;
+                this.notificationService.success("Registration successful!");
+              }, 1500);
+            },
+            error: (error) => {
+              setTimeout(() => {
+                this.authenticationInProgress = false;
+                this.notificationService.error("Registration failed!");
+              }, 1500);
+            }
+          })
+        },
+        error: (error) => {
+          setTimeout(() => {
+            this.authenticationInProgress = false;
+            this.notificationService.error("Registration is for humans only!");
+          }, 1500);
+        },
+      });
   }
 
   onUsernameEntered(username: string) {
     this.authenticationService.checkUsername(username).subscribe((response) => {
       this.isUsernameAvailable = response.ergebnis;
-      
+
     })
   }
 
   onPostalCodeEntered(postalcode: string) {
     this.authenticationService.getCityFromPostalCode(postalcode.trim()).subscribe((response) => {
-      if(response?.postalCodes.length > 0) {
+      if (response?.postalCodes.length > 0) {
         this.registrationForm.controls["city"].setValue(response.postalCodes[0].placeName);
       }
     })

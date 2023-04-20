@@ -1,5 +1,5 @@
 <div class="auth-container">
-    <mat-card class="authentication-card">
+    <mat-card *ngIf="!authenticationInProgress" class="authentication-card">
         <div class="">
             <mat-tab-group mat-stretch-tabs class="stretched-tabs">
                 <mat-tab label="Login">
@@ -95,4 +95,9 @@
             </mat-tab-group>
         </div>
     </mat-card>
+    <div *ngIf="authenticationInProgress" class="center-vh">
+        <img class="robot" src="/assets/robot.gif" />
+        <h4>Checking that you are not a robot...</h4>
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
 </div>

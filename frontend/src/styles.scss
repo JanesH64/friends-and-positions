@@ -88,3 +88,12 @@ body {
   --mdc-snackbar-container-color: rgb(217, 32, 32);
   --mat-mdc-snack-bar-button-color: white;
 }
+
+.center-vh {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 40%;
+}

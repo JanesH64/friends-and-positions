@@ -29,7 +29,7 @@ export class AuthenticationComponent implements OnInit {
     name: new FormControl('', [
       Validators.required,
     ]),
-    postcode: new FormControl('', [
+    postalcode: new FormControl('', [
       Validators.required,
     ]),
     city: new FormControl('', [
@@ -79,6 +79,15 @@ export class AuthenticationComponent implements OnInit {
 
       this.onUsernameEntered(username);
     });
+
+    this.registrationForm.get('postalcode')?.valueChanges.pipe(debounceTime(this.debounce), distinctUntilChanged())
+    .subscribe(postalCode => {
+      if(!postalCode) {
+        return;
+      }
+
+      this.onPostalCodeEntered(postalCode);
+    });
   }
 
   callLogin() {
@@ -116,7 +125,7 @@ export class AuthenticationComponent implements OnInit {
       vorname: this.registrationForm.controls["firstname"].value,
       nachname: this.registrationForm.controls["name"].value,
       strasse: this.registrationForm.controls["street"].value,
-      plz: this.registrationForm.controls["postcode"].value,
+      plz: this.registrationForm.controls["postalcode"].value,
       ort: this.registrationForm.controls["city"].value,
       land: this.registrationForm.controls["country"].value,
       telefon: this.registrationForm.controls["telephone"].value,
@@ -142,6 +151,14 @@ export class AuthenticationComponent implements OnInit {
     this.authenticationService.checkUsername(username).subscribe((response) => {
       this.isUsernameAvailable = response.ergebnis;
       
+    })
+  }
+
+  onPostalCodeEntered(postalcode: string) {
+    this.authenticationService.getCityFromPostalCode(postalcode.trim()).subscribe((response) => {
+      if(response?.postalCodes.length > 0) {
+        this.registrationForm.controls["city"].setValue(response.postalCodes[0].placeName);
+      }
     })
   }
 }

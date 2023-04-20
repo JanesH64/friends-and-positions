@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Session } from '../models/session';
 import { Registration } from '../models/registration';
 import { User } from '../models/user';
+import { PostalCodeResponse } from '../models/postalCodeResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class AuthenticationService {
     return this.httpClient.get<ApiResponse>(`/api/checkLoginName?id=${username}`);
   }
 
-  getCityFromPostcode(postcode: string) {
-    return this.httpClient.get<ApiResponse>(`/api/getOrt?postalcode=${postcode}&username=advancedinternettech`);
+  getCityFromPostalCode(postcode: string) {
+    return this.httpClient.get<PostalCodeResponse>(`/api/getOrt?postalcode=${postcode}&username=advancedinternettech`);
   }
 }

@@ -3,7 +3,7 @@
         <div class="">
             <mat-tab-group mat-stretch-tabs class="stretched-tabs">
                 <mat-tab label="Login">
-                    <form [formGroup]="loginForm" class="flex-container form-field">
+                    <form [formGroup]="loginForm" class="flex-container form-field login-input">
                         <div class="flex-container headline-container">
                             <img class="logo" src="../../assets/fap-logo.png">
                             <h2>LOGIN</h2>
@@ -18,7 +18,11 @@
                             <mat-label>Password</mat-label>
                             <input type="password" matInput formControlName="password">
                         </mat-form-field>
-                        <button (click)="callLogin()" [disabled]="loginForm.invalid" mat-raised-button color="#FF655B" color="primary">Log in</button>
+
+                        <re-captcha formControlName="recaptcha" class="recaptcha" [siteKey]="siteKey"></re-captcha>
+
+                        <button (click)="callLogin()" [disabled]="loginForm.invalid" mat-raised-button color="#FF655B"
+                            color="primary">Log in</button>
                     </form>
                 </mat-tab>
 
@@ -38,23 +42,6 @@
                             <mat-form-field class="full-width" appearance="outline">
                                 <mat-label>Name</mat-label>
                                 <input matInput formControlName="name">
-                            </mat-form-field>
-
-                            <mat-form-field class="full-width" appearance="outline">
-                                <mat-label>Username</mat-label>
-                                <input matInput formControlName="username">
-                                <mat-hint *ngIf="isUsernameAvailable">Username is available</mat-hint>
-                                <mat-error *ngIf="isUsernameAvailable">Username is unavailable</mat-error>
-                            </mat-form-field>
-
-                            <mat-form-field class="full-width" appearance="outline">
-                                <mat-label>Password</mat-label>
-                                <input type="password" matInput formControlName="password">
-                            </mat-form-field>
-
-                            <mat-form-field class="full-width" appearance="outline">
-                                <mat-label>Retype password</mat-label>
-                                <input type="password" matInput formControlName="password">
                             </mat-form-field>
 
                             <mat-form-field class="full-width" appearance="outline">
@@ -86,18 +73,39 @@
                                 <mat-label>Telephone</mat-label>
                                 <input matInput type="telephone" formControlName="telephone">
                             </mat-form-field>
+
+                            <mat-form-field class="full-width whole-line" appearance="outline">
+                                <mat-label>Username</mat-label>
+                                <input matInput formControlName="username">
+                                <mat-hint *ngIf="isUsernameAvailable">Username is available</mat-hint>
+                                <mat-error *ngIf="isUsernameAvailable === false">Username is unavailable</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field class="full-width whole-line" appearance="outline">
+                                <mat-label>Password</mat-label>
+                                <input type="password" matInput formControlName="password">
+                                <mat-error *ngIf="registrationForm.get('password')?.getError('notEqual')">Passwords do not match!</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field class="full-width whole-line" appearance="outline">
+                                <mat-label>Confirm password</mat-label>
+                                <input type="password" matInput formControlName="confirmPassword">
+                                <mat-error *ngIf="registrationForm.get('confirmPassword')?.getError('notEqual')">Passwords do not match!</mat-error>
+                            </mat-form-field>
+
+                            <re-captcha formControlName="recaptcha" [siteKey]="siteKey"></re-captcha>
                         </div>
 
-
-                        <button (click)="callRegister()" [disabled]="registrationForm.invalid" mat-raised-button color="primary">Register</button>
+                        <button (click)="callRegister()" [disabled]="registrationForm.invalid" mat-raised-button
+                            color="primary">Register</button>
                     </form>
                 </mat-tab>
             </mat-tab-group>
         </div>
     </mat-card>
     <div *ngIf="authenticationInProgress" class="center-vh">
-        <img class="robot" src="/assets/robot.gif" />
-        <h4>Checking that you are not a robot...</h4>
+        <img class="loading-animation" src="/assets/authentication.gif" />
+        <h4>Authentication in progress...</h4>
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
 </div>

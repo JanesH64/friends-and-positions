@@ -1,4 +1,3 @@
-import { DialogConfig } from '@angular/cdk/dialog';
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
@@ -19,14 +18,14 @@ export class NotificationService {
     horizontalPosition: "center",
     verticalPosition: "bottom",
     panelClass: "success-snackbar",
-    duration: 30000
+    duration: 3000
   }
 
   errorSnackBarConfig: MatSnackBarConfig = {
     horizontalPosition: "center",
       verticalPosition: "bottom",
       panelClass: "error-snackbar",
-      duration: 30000
+      duration: 3000
   }
 
   success(message: string) {

@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { DataService } from '../common/data/data.service';
 import { NotificationService } from '../common/notification/notification.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { ReCaptchaV3Service } from 'ng-recaptcha';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-authentication',
@@ -18,11 +18,12 @@ export class AuthenticationComponent implements OnInit {
   registrationForm = this.formBuilder.group({
     username: new FormControl('', [
       Validators.required,
-      Validators.minLength(4)
     ]),
     password: new FormControl('', [
       Validators.required,
-      Validators.minLength(4)
+    ]),
+    confirmPassword: new FormControl('', [
+      Validators.required,
     ]),
     firstname: new FormControl('', [
       Validators.required,
@@ -48,6 +49,9 @@ export class AuthenticationComponent implements OnInit {
     ]),
     telephone: new FormControl('', [
       Validators.required,
+    ]),
+    recaptcha: new FormControl('', [
+      Validators.required,
     ])
   });
 
@@ -58,21 +62,24 @@ export class AuthenticationComponent implements OnInit {
     password: new FormControl('', [
       Validators.required,
     ]),
+    recaptcha: new FormControl('', [
+      Validators.required,
+    ]),
   });
 
   isUsernameAvailable: boolean | undefined = undefined;
+
   authenticationInProgress = false;
+  siteKey = environment.recaptcha.siteKey;
+
   private debounce = 300;
-
-
 
   constructor(
     private formBuilder: FormBuilder,
     private authenticationService: AuthenticationService,
     private router: Router,
     private dataService: DataService,
-    private notificationService: NotificationService,
-    private recaptchaV3Service: ReCaptchaV3Service) {
+    private notificationService: NotificationService) {
   }
   ngOnInit(): void {
     this.registrationForm.get('username')?.valueChanges.pipe(debounceTime(this.debounce), distinctUntilChanged())
@@ -92,6 +99,16 @@ export class AuthenticationComponent implements OnInit {
 
         this.onPostalCodeEntered(postalCode);
       });
+
+    this.registrationForm.get('password')?.valueChanges
+      .subscribe(() => {
+        this.onPasswordChanged();
+      });
+
+    this.registrationForm.get('confirmPassword')?.valueChanges
+      .subscribe(() => {
+        this.onPasswordChanged();
+      });
   }
 
   callLogin() {
@@ -104,49 +121,38 @@ export class AuthenticationComponent implements OnInit {
       },
     };
 
-    this.recaptchaV3Service.execute('importantAction')
-      .subscribe({
-        next: (token: string) => {
-          if (!token) {
-            this.notificationService.error("Login is for humans only!");
+    this.authenticationService.login(user).subscribe(
+      {
+        next: (response) => {
+          if (!response.sessionID) {
+            setTimeout(() => {
+              this.authenticationInProgress = false;
+              this.notificationService.error("Login failed!");
+            }, 1500);
+            return;
           }
 
-          this.authenticationService.login(user).subscribe(
-            {
-              next: (response) => {
-                if (!response.sessionID) {
-                  this.notificationService.error("Login failed!");
-                  return;
-                }
 
+          user.session = response.sessionID;
+          this.dataService.user = user;
+          this.setLocalStorage();
 
-                user.session = response.sessionID;
-                this.dataService.user = user;
-
-                setTimeout(() => {
-                  this.authenticationInProgress = false;
-                  this.notificationService.success("Login successful!");
-                  this.router.navigateByUrl('/');
-                }, 1500);
-              },
-              error: (error) => {
-                setTimeout(() => {
-                  this.authenticationInProgress = false;
-                  this.notificationService.error("Login failed!");
-                }, 1500);
-              }
-            });
+          setTimeout(() => {
+            this.authenticationInProgress = false;
+            this.notificationService.success("Login successful!");
+            this.router.navigateByUrl('/');
+          }, 1500);
         },
         error: (error) => {
           setTimeout(() => {
             this.authenticationInProgress = false;
-            this.notificationService.error("Registration is for humans only!");
+            this.notificationService.error("Login failed!");
           }, 1500);
         }
       });
   }
 
-  async callRegister() {
+  callRegister() {
     let user: Registration = {
       loginName: this.registrationForm.controls["username"].value,
       passwort: {
@@ -166,46 +172,35 @@ export class AuthenticationComponent implements OnInit {
 
     this.authenticationInProgress = true;
 
-    this.recaptchaV3Service.execute('importantAction')
-      .subscribe({
-        next: (token: string) => {
-          if (!token) {
-            this.notificationService.error("Registration is for humans only!");
-          }
+    this.authenticationService.addUser(user).subscribe({
+      next: (response) => {
+        if (!response.ergebnis) {
+          this.notificationService.error(response.meldung);
+          return;
+        }
 
-          this.authenticationService.addUser(user).subscribe({
-            next: (response) => {
-              if (!response.ergebnis) {
-                this.notificationService.error(response.meldung);
-                return;
-              }
-
-              setTimeout(() => {
-                this.authenticationInProgress = false;
-                this.notificationService.success("Registration successful!");
-              }, 1500);
-            },
-            error: (error) => {
-              setTimeout(() => {
-                this.authenticationInProgress = false;
-                this.notificationService.error("Registration failed!");
-              }, 1500);
-            }
-          })
-        },
-        error: (error) => {
-          setTimeout(() => {
-            this.authenticationInProgress = false;
-            this.notificationService.error("Registration is for humans only!");
-          }, 1500);
-        },
-      });
+        setTimeout(() => {
+          this.authenticationInProgress = false;
+          this.notificationService.success("Registration successful!");
+        }, 1500);
+      },
+      error: (error) => {
+        setTimeout(() => {
+          this.authenticationInProgress = false;
+          this.notificationService.error("Registration failed!");
+        }, 1500);
+      }
+    })
   }
 
   onUsernameEntered(username: string) {
     this.authenticationService.checkUsername(username).subscribe((response) => {
       this.isUsernameAvailable = response.ergebnis;
-
+      if (!this.isUsernameAvailable) {
+        this.registrationForm.get('username')?.setErrors({
+          unavailable: true
+        });
+      }
     })
   }
 
@@ -215,5 +210,37 @@ export class AuthenticationComponent implements OnInit {
         this.registrationForm.controls["city"].setValue(response.postalCodes[0].placeName);
       }
     })
+  }
+
+  onPasswordChanged() {
+    let confirmPasswordControl = this.registrationForm.get('confirmPassword');
+    let passwordControl = this.registrationForm.get('password');
+
+    if ((!passwordControl || passwordControl.value === "") || (!confirmPasswordControl || confirmPasswordControl.value === "")) {
+      passwordControl?.setErrors(null);
+      confirmPasswordControl?.setErrors(null);
+      return;
+    }
+
+    if (passwordControl?.value === confirmPasswordControl?.value) {
+      passwordControl?.setErrors(null);
+      confirmPasswordControl?.setErrors(null);
+      return;
+    }
+
+    console.log("not equal")
+
+    passwordControl?.setErrors({
+      notEqual: true
+    });
+
+    confirmPasswordControl?.setErrors({
+      notEqual: true
+    });
+  }
+
+  setLocalStorage() {
+    localStorage.setItem("fap_currentuser", `${this.dataService.user?.loginName}`);
+    localStorage.setItem("fap_authsessionid", `${this.dataService.user?.session}`);
   }
 }

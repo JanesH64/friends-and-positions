@@ -1,6 +1,6 @@
 export interface User {
     loginName: string | null,
-    passwort: {
+    passwort?: {
         passwort: string | null
     }
     session?: string

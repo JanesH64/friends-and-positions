@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module, RecaptchaFormsModule, RecaptchaModule} from 'ng-recaptcha';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,6 +21,8 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { HomeComponent } from './home/home.component';
 import { environment } from 'src/environments/environment';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatDividerModule} from '@angular/material/divider'; 
+
 
 @NgModule({
   declarations: [
@@ -44,14 +46,12 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     MatToolbarModule,
     MatSnackBarModule,
     MatDialogModule,
-    RecaptchaV3Module,
-    MatProgressBarModule
+    MatProgressBarModule,
+    RecaptchaModule,
+    RecaptchaFormsModule,
+    MatDividerModule
   ],
   providers: [
-    {
-      provide: RECAPTCHA_V3_SITE_KEY,
-      useValue: environment.recaptcha.siteKey,
-    }
   ],
   bootstrap: [AppComponent]
 })

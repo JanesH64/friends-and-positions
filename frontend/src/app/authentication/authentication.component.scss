@@ -23,20 +23,35 @@
 }
 
 .registration-input {
-    padding-top: 8px;
+    padding: 8px 24px;
     margin-bottom: 16px;
     height: 40vh;
     overflow-y: scroll;
     flex-direction: row;
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    column-gap: 16px;
+    row-gap: 8px;
+    align-items: center;
+    justify-content: center;
 }
 
-.registration-input > * {
-    flex: 1 1 400px;
+.login-input {
+    padding: 8px 24px;
 }
 
-.robot {
-    height: 200px;
+.registration-input > mat-form-field {
+    flex: 2 1 500px;
+}
+
+.registration-input > mat-form-field.whole-line {
+    flex: unset;
+}
+
+.loading-animation {
+    height: 300px;
+}
+
+.recaptcha {
+    margin: 16px;
 }

@@ -21,8 +21,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { HomeComponent } from './home/home.component';
 import { environment } from 'src/environments/environment';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatDividerModule} from '@angular/material/divider'; 
-
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
   declarations: [

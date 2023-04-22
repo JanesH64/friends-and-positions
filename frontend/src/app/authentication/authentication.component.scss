@@ -1,0 +1,57 @@
+.form-field {
+    margin: 20px;
+    flex-grow: 100;
+}
+
+.logo {
+    width: 2rem;
+}
+
+.auth-container {
+    padding-top: 20px;
+    height: 80%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.authentication-card {
+    padding: 16px;
+    width: 80%;
+    height: 80vh;
+    max-height: 100%;
+}
+
+.registration-input {
+    padding: 8px 24px;
+    margin-bottom: 16px;
+    height: 40vh;
+    overflow-y: scroll;
+    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 16px;
+    row-gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-input {
+    padding: 8px 24px;
+}
+
+.registration-input > mat-form-field {
+    flex: 2 1 500px;
+}
+
+.registration-input > mat-form-field.whole-line {
+    flex: unset;
+}
+
+.loading-animation {
+    height: 300px;
+}
+
+.recaptcha {
+    margin: 16px;
+}

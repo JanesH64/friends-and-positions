@@ -4,15 +4,59 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "loginName": "peterl",
+    "loginName": "hans",
     "passwort": {
         "passwort": "geheim"
     },
-    "vorname": "Peter",
+    "vorname": "Hans",
     "nachname": "Lustig",
+    "strasse": "Goethestraße",
+    "plz": "48703",
+    "ort": "Stadtlohn",
+    "land": "Deutschland",
+    "telefon": "02871/4711007",
+    "email": {
+        "adresse": "peterl@test.de"
+    }
+}
+
+### Service1_AddUser
+POST http://localhost:8123/FAPServer/service/fapservice/addUser
+Accept: application/json
+Content-Type: application/json
+
+{
+    "loginName": "heinrich",
+    "passwort": {
+        "passwort": "geheim"
+    },
+    "vorname": "Heinrich",
+    "nachname": "Brüning",
     "strasse": "Akazienweg 13",
     "plz": "46397",
     "ort": "Bocholt",
+    "land": "Deutschland",
+    "telefon": "02871/4711007",
+    "email": {
+        "adresse": "peterl@test.de"
+    }
+}
+
+### Service1_AddUser
+POST http://localhost:8123/FAPServer/service/fapservice/addUser
+Accept: application/json
+Content-Type: application/json
+
+{
+    "loginName": "madita",
+    "passwort": {
+        "passwort": "geheim"
+    },
+    "vorname": "Madita",
+    "nachname": "Löffel",
+    "strasse": "Goethestraße 7",
+    "plz": "48712",
+    "ort": "Gescher",
     "land": "Deutschland",
     "telefon": "02871/4711007",
     "email": {

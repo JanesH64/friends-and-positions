@@ -1,0 +1,36 @@
+
+<div id="request-location">
+    <div id="top-row">
+        <p>Benutzerkennung:</p>
+        
+        <mat-form-field id="UserInput">
+            <mat-label>Name</mat-label>
+            <input type="text" matInput #username>            
+        </mat-form-field>
+        
+        <button mat-raised-button (click)="this.addUser(username.value)">Hinzufügen</button>
+        <button mat-raised-button color="warn">Logout</button>
+    </div>
+    <div id="bottom-row">
+        <div id="userTable">
+            <table mat-table>
+                <tr id="headerRow">
+                    <th>Nr.</th>
+                    <th>Benutzer-ID</th>
+                    <th></th>
+                </tr>
+                <tr *ngFor="let user of users; let i = index">
+                    <th>{{this.i+1}}</th>
+                    <th>{{user.loginName}}</th>
+                    <th>
+                        <button mat-icon-button (click)="this.removeUser(this.user)">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </th>
+                </tr>
+            </table>
+        </div>
+        <div id="map"></div>
+    </div>
+
+</div>

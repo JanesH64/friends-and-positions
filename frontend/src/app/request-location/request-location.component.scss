@@ -1,0 +1,26 @@
+#request-location{
+    margin: 15px;
+    padding: 15px;
+    border: 1px solid black;
+
+    #top-row{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    #bottom-row{
+        display: flex;
+        #userTable{
+            #headerRow{
+            }
+        }
+    }
+
+}
+
+#map {
+    width: 75%;
+    height: 500px;
+    padding: 0;
+  }

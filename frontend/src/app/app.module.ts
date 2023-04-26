@@ -22,13 +22,16 @@ import { HomeComponent } from './home/home.component';
 import { environment } from 'src/environments/environment';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatDividerModule} from '@angular/material/divider';
+import { RequestLocationComponent } from './request-location/request-location.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthenticationComponent,
     NavMenuComponent,
-    HomeComponent
+    HomeComponent,
+    RequestLocationComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,8 @@ import {MatDividerModule} from '@angular/material/divider';
     MatProgressBarModule,
     RecaptchaModule,
     RecaptchaFormsModule,
-    MatDividerModule
+    MatDividerModule,
+    LeafletModule
   ],
   providers: [
   ],

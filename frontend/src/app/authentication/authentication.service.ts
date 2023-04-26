@@ -12,6 +12,8 @@ import { PostalCodeResponse } from '../models/postalCodeResponse';
 })
 export class AuthenticationService {
 
+  sessionId : string = "";
+
   constructor(
     private httpClient: HttpClient
   ) { }
@@ -21,7 +23,11 @@ export class AuthenticationService {
   }
 
   login(user: User): Observable<Session> {
-    return this.httpClient.post<Session>("/api/login", user);
+    let result = this.httpClient.post<Session>("/api/login", user);
+    result.subscribe(res =>{
+      this.sessionId = res.sessionID;
+    })
+    return result;
   }
 
   checkUsername(username: string) {
@@ -30,5 +36,9 @@ export class AuthenticationService {
 
   getCityFromPostalCode(postcode: string) {
     return this.httpClient.get<PostalCodeResponse>(`/api/getOrt?postalcode=${postcode}&username=advancedinternettech`);
+  }
+
+  getSessionId():string{
+    return this.sessionId;
   }
 }

@@ -133,11 +133,11 @@ export class AuthenticationComponent implements OnInit {
           }
 
 
-          user.session = response.sessionID;
-          this.dataService.user = user;
-          this.setLocalStorage();
+          user.sitzung = response.sessionID;
 
           setTimeout(() => {
+            this.dataService.user = user;
+            this.setSessionStorage();
             this.authenticationInProgress = false;
             this.notificationService.success("Login successful!");
             this.router.navigateByUrl('/');
@@ -239,8 +239,8 @@ export class AuthenticationComponent implements OnInit {
     });
   }
 
-  setLocalStorage() {
-    localStorage.setItem("fap_currentuser", `${this.dataService.user?.loginName}`);
-    localStorage.setItem("fap_authsessionid", `${this.dataService.user?.session}`);
+  setSessionStorage() {
+    sessionStorage.setItem("fap_currentuser", `${this.dataService.user?.loginName}`);
+    sessionStorage.setItem("fap_authsessionid", `${this.dataService.user?.sitzung}`);
   }
 }

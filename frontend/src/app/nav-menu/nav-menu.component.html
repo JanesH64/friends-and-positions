@@ -3,7 +3,7 @@
         <a *ngIf="isUserAuthenticated()" mat-icon-button [routerLink]="" [matTooltip]="'Update location'">
             <mat-icon>edit_location</mat-icon>
         </a>
-        <a *ngIf="isUserAuthenticated()" mat-icon-button [routerLink]="" [matTooltip]="'Request location'">
+        <a *ngIf="isUserAuthenticated()" mat-icon-button [routerLink]="'request-location'" [matTooltip]="'Request location'">
             <mat-icon>map</mat-icon>
         </a>
         <span class="spacer"></span>

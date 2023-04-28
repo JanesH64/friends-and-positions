@@ -15,8 +15,6 @@ import { NotificationService } from '../common/notification/notification.service
 })
 export class AuthenticationService {
 
-  sessionId : string = "";
-
   constructor(
     private httpClient: HttpClient,
     private dataService: DataService,
@@ -29,11 +27,7 @@ export class AuthenticationService {
   }
 
   login(user: User): Observable<Session> {
-    let result = this.httpClient.post<Session>("/api/login", user);
-    result.subscribe(res =>{
-      this.sessionId = res.sessionID;
-    })
-    return result;
+    return this.httpClient.post<Session>("/api/login", user);
   }
 
   checkUsername(username: string) {

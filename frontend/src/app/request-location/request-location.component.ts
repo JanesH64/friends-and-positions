@@ -14,17 +14,17 @@ export class RequestLocationComponent implements AfterViewInit {
     {
       loginName: "adama",
       passwort: {passwort: ""},
-      session: ""
+      sitzung: ""
     },
     {
       loginName: "berndb",
       passwort: {passwort: ""},
-      session: ""
+      sitzung: ""
     },
     {
       loginName: "jpriemer",
       passwort: {passwort: ""},
-      session: ""
+      sitzung: ""
     }
   ];
 
@@ -66,7 +66,7 @@ export class RequestLocationComponent implements AfterViewInit {
             this.users.push({
               loginName: userRes.loginName,
               passwort: {passwort: ""},
-              session: ""              
+              sitzung: ""              
             });          
           }
         }

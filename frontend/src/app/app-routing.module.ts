@@ -13,7 +13,7 @@ const IsUserAuthenticated: CanActivateFn =
 const routes: Routes = [
   { path: 'authentication', component: AuthenticationComponent },
   { path: '', component: HomeComponent, canActivate: [IsUserAuthenticated] },
-  { path: 'request-location', component: RequestLocationComponent},
+  { path: 'request-location', component: RequestLocationComponent, canActivate: [IsUserAuthenticated]},
 ];
 
 @NgModule({

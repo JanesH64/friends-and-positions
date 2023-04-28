@@ -3,5 +3,5 @@ export interface User {
     passwort?: {
         passwort: string | null
     }
-    session?: string
+    sitzung?: string
 }

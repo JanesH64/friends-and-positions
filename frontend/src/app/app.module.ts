@@ -22,6 +22,7 @@ import { HomeComponent } from './home/home.component';
 import { environment } from 'src/environments/environment';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import { RequestLocationComponent } from './request-location/request-location.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
@@ -52,6 +53,7 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     RecaptchaModule,
     RecaptchaFormsModule,
     MatDividerModule,
+    MatTooltipModule,
     LeafletModule
   ],
   providers: [

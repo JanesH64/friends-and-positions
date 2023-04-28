@@ -1,5 +1,5 @@
 export const environment = {
     recaptcha: {
-        siteKey: '6LfrV6YlAAAAAHHOt2XsvAs69CF9WClntNCtstM5',
+        siteKey: '6LejscQlAAAAAG6_kl4oDrn_8qJVNqcnybZ53Rpx',
     }
 };

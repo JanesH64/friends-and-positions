@@ -1,10 +1,10 @@
 {
     "/api/*": {
-      "target": "http://localhost:8123/FAPServer/service/fapservice/",
+      "target": "https://fapfa.azurewebsites.net/FAPServer/service/fapservice/",
       "pathRewrite": {
         "^/api": ""
       },
       "secure": false,
       "changeOrigin": true
     }
-  }  
+  }

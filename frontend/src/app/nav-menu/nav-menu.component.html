@@ -1,16 +1,19 @@
 <header>
     <mat-toolbar class="toolbar">
-        <a mat-button [routerLink]="">
-            <span>Update location</span>
+        <a *ngIf="isUserAuthenticated()" mat-icon-button [routerLink]="" [matTooltip]="'Update location'">
+            <mat-icon>edit_location</mat-icon>
+        </a>
+        <a *ngIf="isUserAuthenticated()" mat-icon-button [routerLink]="" [matTooltip]="'Request location'">
+            <mat-icon>map</mat-icon>
         </a>
         <span class="spacer"></span>
-        <a [routerLink]="'home'" mat-button class="toolbar-action">
+        <a [routerLink]="''" mat-button class="toolbar-action">
             <span class="headline headline-start">FRIENDS &</span>
             <span class="headline headline-end"> PLACES</span>
         </a>
         <span class="spacer"></span>
-        <a mat-button [routerLink]="requestLocation">
-            <span>Request location</span>
+        <a *ngIf="isUserAuthenticated()" mat-icon-button [matTooltip]="'Logout'" (click)="logout()">
+            <mat-icon>logout</mat-icon>
         </a>
     </mat-toolbar>
 </header>

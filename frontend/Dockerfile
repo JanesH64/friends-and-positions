@@ -1,7 +1,9 @@
 FROM node:latest AS build
 WORKDIR /frontend
-COPY . .
+COPY ./package.json .
+COPY ./package-lock.json .
 RUN npm install
+COPY . .
 RUN npm run build
 
 FROM nginx:latest

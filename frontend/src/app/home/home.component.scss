@@ -1,0 +1,37 @@
+.landing-page-animation {
+    height: 70vh;
+}
+
+.title {
+    font-size: 3rem;
+    line-height: 1.2em;
+
+}
+
+.container {
+    position: relative;
+    overflow: hidden;
+}
+
+.text-container {
+    width: 80%;
+    margin: 20px;
+}
+
+.spacer {
+    margin: 20px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.animation {
+    position: absolute;
+    right: 5%;
+    bottom: 30%;
+    z-index: -1;
+    height: 20vw;
+}

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthenticationService } from '../authentication/authentication.service';
 import { ApiResponse } from '../models/apiResponse';
 import { User } from '../models/user';
+import { DataService } from '../common/data/data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +11,22 @@ export class RequestLocationService {
 
   constructor(
     private httpClient: HttpClient,
-    private authenticationService: AuthenticationService
+    private dataService: DataService
   ) {}
 
   retrieveUserInformation(username:string){
-    let sessionId = "a02bba56-6a4e-476c-96c6-075eee1a43b6"
-    //let sessionId = this.authenticationService.getSessionId();;
-    return this.httpClient.get<ApiResponse>(`/api/getBenutzer?login=${username}&session=${sessionId}`);
+    let user = this.dataService.user;
+    let sessionId = user?.sitzung;
+    let login = user?.loginName;
+    return this.httpClient.get<ApiResponse>(`/api/getStandort?getBenutzer?login=${username}&session=${sessionId}`);
+    ///getBenutzer?login=tester&session=ac7f5f1f-0685-4786-a5cc-26f798e90746
+  }
+
+  retrieveUserLocation(username:string){
+    let user = this.dataService.user;
+    let sessionId = user?.sitzung;
+    let login = user?.loginName;
+    return this.httpClient.get<ApiResponse>(`/api/getStandort?login=${login}&session=${sessionId}&id=${username}`);
   }
 
   checkUsername(username: string) {

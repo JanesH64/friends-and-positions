@@ -10,21 +10,37 @@ import { MapOptions } from 'leaflet';
   styleUrls: ['./request-location.component.scss']
 })
 export class RequestLocationComponent implements AfterViewInit {
-  users: User[] = [
+  users: {
+    "loginName": string,
+    "sitzung": string,
+    "standort": {
+        "breitengrad": number,
+        "laengengrad": number
+    }
+}[] = [
     {
       loginName: "adama",
-      passwort: {passwort: ""},
-      sitzung: ""
+      sitzung: "",
+      standort: {
+        breitengrad: 51.992706,
+        laengengrad: 6.902117
+      }
     },
     {
       loginName: "berndb",
-      passwort: {passwort: ""},
-      sitzung: ""
+      sitzung: "",
+      standort: {
+        breitengrad: 51.8517397,
+        laengengrad: 6.6395545
+      }
     },
     {
       loginName: "jpriemer",
-      passwort: {passwort: ""},
-      sitzung: ""
+      sitzung: "",
+      standort: {
+        breitengrad: 51.9529137,
+        laengengrad: 6.9891851
+      }
     }
   ];
 
@@ -46,12 +62,16 @@ export class RequestLocationComponent implements AfterViewInit {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    var place = {lat: 51.505, lng: -0.09};
+    this.users.forEach(user=>{
+      this.addMarkerToMap(user.standort.breitengrad,user.standort.laengengrad,user.loginName)
+    })
+
+    /*var place = {lat: 51.505, lng: -0.09};
 
     let marker = Leaflet.marker(place).bindPopup('test');
 
     marker.addTo(this.map);
-    this.markers.push(marker)
+    this.markers.push(marker)*/
 
   }
 
@@ -61,23 +81,32 @@ export class RequestLocationComponent implements AfterViewInit {
     if(this.users.findIndex(tmp => tmp.loginName == searchString) == -1){
       let tmpuser = this.requestLocationService.retrieveUserInformation(searchString);
       tmpuser.subscribe((result:any) => {
-        result.benutzerliste.forEach( (userRes:any) =>{
-          if(userRes.loginName == searchString){
-            this.users.push({
-              loginName: userRes.loginName,
-              passwort: {passwort: ""},
-              sitzung: ""              
-            });          
-          }
-        }
-        )
+        console.log(result);
+        if(result.loginName == searchString){
+          this.users.push({
+            loginName: result.loginName,
+            sitzung: "",
+            standort: {
+              breitengrad: result.standort.breitengrad,
+              laengengrad: result.standort.laengengrad
+            }
+          });
+          this.addMarkerToMap(result.standort.breitengrad,result.standort.laengengrad,searchString)
+        }          
       })
     }
   }
-  removeUser(user: User){
+  removeUser(user: {
+    "loginName": string,
+    "sitzung": string,
+    "standort": {
+        "breitengrad": number,
+        "laengengrad": number
+    }}){
     let index = this.users.findIndex(tmp => tmp == user);
     console.log(index);
     this.users.splice(index,1);
+    this.removeMarkerFromMap(user.standort.breitengrad,user.standort.laengengrad,user.loginName)
   }
 
   addMarkerToMap(pLat: number, pLon: number, name: string){
@@ -92,7 +121,9 @@ export class RequestLocationComponent implements AfterViewInit {
 
     let layerGroup = new Leaflet.LayerGroup(this.markers);
 
-    let map = Leaflet.map('map').setView([51.505, -0.09], 10);
+    let viewInfo = this.getViewInformation();
+
+    let map = Leaflet.map('map').setView([viewInfo.lat, viewInfo.lon], viewInfo.zoom);
     this.map = map;
     Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -104,29 +135,46 @@ export class RequestLocationComponent implements AfterViewInit {
     this.markers.push(marker)
     
   }
+
+  removeMarkerFromMap(pLat: number, pLon: number, name: string){
+    //this.map.remove();
+    
+    this.markers.forEach(marker => {
+      if(marker.getLatLng().lat == pLat && marker.getLatLng().lng == pLon){
+        this.map.removeLayer(marker);
+      }
+      //this.map.removeLayer(marker);
+    });
+  }
+
+  getViewInformation():{lat:number,lon:number,zoom:number}{
+    let counter = 0;
+    let latSum = 0;
+    let lonSum = 0;
+    let maxLat = 0;
+    let minLat = 0;
+    let maxLon = 0;
+    let minLon = 0;
+    this.users.forEach(user =>{
+      counter++;
+      let lat = user.standort.breitengrad;
+      let lon = user.standort.laengengrad;
+      latSum += lat;
+      lonSum += lon
+      /*
+      if(maxLat == 0 || lat > maxLat) maxLat = lat;
+      if(minLat == 0 || lat < minLat) minLat = lat;
+      if(maxLon == 0 || lat > maxLon) maxLon = lon;
+      if(minLon == 0 || lat < minLon) minLon = lon;
+      */
+    })
+
+
+    
+    return {
+      lat: latSum/counter,
+      lon: lonSum/counter,
+      zoom: 10
+    }
+  }
 }
-
-
-  /*
-  	 	// We’ll add a tile layer to add to our map, in this case it’s a OSM tile layer.
-	 	// Creating a tile layer usually involves setting the URL template for the tile images
-	 	var osmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-	 	    osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	 	    osm = L.tileLayer(osmUrl, {
-	 	        maxZoom: 18,
-	 	        attribution: osmAttrib
-	 	    });
-
-	 	// initialize the map on the "map" div with a given center and zoom
-	 	var map = L.map('map').setView([19.04469, 72.9258], 12).addLayer(osm);
-    var place = {lat: 19.064064852093967, lng: 72.91248321533203}
-
-L.marker(place, {
-	 	        draggable: true,
-	 	        title: "Resource location",
-	 	        alt: "Resource Location",
-	 	        riseOnHover: true
-	 	    }).addTo(map)
-	 	       
-	 	
-  */

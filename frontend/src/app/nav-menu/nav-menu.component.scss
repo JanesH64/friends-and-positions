@@ -1,22 +1,45 @@
 .toolbar-action {
-    color: white;
-    font-size: 1.5rem;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.toolbar {
+  background-image: linear-gradient(to right, #84a7dc, #6c91ca, #537bb9, #3a66a7, #1c5196);
+}
+
+.headline {
+  color: white;
+  margin-left: 5px;
+}
+
+.headline-start {
+  color: rgb(41, 40, 40)
+}
+
+.headline-end {
+  color: rgb(240, 240, 240)
+}
+
+.logout {
+  color: white
+}
+
+@media screen and (max-width: 600px) {
+  .xl-header {
+    display: none;
   }
-  
-  .toolbar {
-    background-image: linear-gradient(to right, #84a7dc, #6c91ca, #537bb9, #3a66a7, #1c5196);
+
+  .s-header {
+    display: flex;
   }
-  
-  .headline {
-    color: white;
-    margin-left: 5px;
+}
+
+@media screen and (min-width: 600px) {
+  .xl-header {
+    display: flex;
   }
-  
-  .headline-start {
-    color: rgb(41, 40, 40)
+
+  .s-header {
+    display: none;
   }
-  
-  .headline-end {
-    color: rgb(240, 240, 240)
-  }
-  
+}

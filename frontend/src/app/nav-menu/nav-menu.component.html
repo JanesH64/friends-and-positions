@@ -7,13 +7,17 @@
             <mat-icon>map</mat-icon>
         </a>
         <span class="spacer"></span>
-        <a [routerLink]="''" mat-button class="toolbar-action">
+        <a [routerLink]="''" mat-button class="toolbar-action xl-header">
             <span class="headline headline-start">FRIENDS &</span>
             <span class="headline headline-end"> POSITIONS</span>
         </a>
+        <a [routerLink]="''" mat-button class="toolbar-action s-header">
+            <span class="headline headline-start">F &</span>
+            <span class="headline headline-end"> P</span>
+        </a>
         <span class="spacer"></span>
         <a *ngIf="isUserAuthenticated()" mat-icon-button [matTooltip]="'Logout'" (click)="logout()">
-            <mat-icon>logout</mat-icon>
+            <mat-icon class="logout">logout</mat-icon>
         </a>
     </mat-toolbar>
 </header>

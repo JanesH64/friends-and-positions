@@ -1,0 +1,62 @@
+<div class="update-location-container">
+
+    <div class="update-location-leftside">
+
+        <div class="update-location-information">
+            <form [formGroup]="updateLocationForm" class="flex-container form-field">
+                <mat-form-field  class="full-width whole-line non-editable" appearance="outline">
+                    <mat-label>Username</mat-label>
+                    <input  matInput  [readonly]="true" formControlName="username" >
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Postalcode</mat-label>
+                    <input matInput formControlName="postalcode">
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>City</mat-label>
+                    <input matInput formControlName="city">
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Street</mat-label>
+                    <input matInput formControlName="street">
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Country</mat-label>
+                    <input matInput formControlName="country">
+                </mat-form-field>
+            </form>
+        </div>
+
+        <div class="action-buttons">
+
+            <button (click)="updateLocation()" [disabled]="updateLocationForm.invalid" mat-raised-button color="primary">
+                <mat-icon>location_on</mat-icon>
+                            OK
+            </button>
+       
+            <button mat-raised-button [routerLink]="''">
+                <mat-icon>home</mat-icon>
+                Abbrechen
+            </button>
+
+            <a *ngIf="isUserAuthenticated()" mat-icon-button [matTooltip]="'Logout'" (click)="logout()">
+                <mat-icon color="warn">logout</mat-icon>
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="update-location-rightside">
+
+        <div class="update-location-error-message">
+            space for error messages
+        </div>
+
+        <div class="update-location-map">
+            Map
+        </div>
+
+    </div>
+
+</div>

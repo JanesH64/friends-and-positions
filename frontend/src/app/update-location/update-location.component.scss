@@ -1,0 +1,51 @@
+
+.update-location-container {
+    padding-top: 10%;
+    padding-left: 15%;
+    padding-right: 15%;
+    display: flex
+}
+
+
+
+.update-location-leftside {
+    flex: 6;
+}
+
+.update-location-information {
+
+
+}
+.action-buttons {
+
+
+}
+
+.update-location-rightside {
+    flex: 5;
+}
+
+.update-location-error-message {
+
+
+}
+.uupdate-location-map {
+
+
+}
+
+.spacer {
+    margin: 20px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    gap: 18px;
+}
+
+
+.non-editable{
+    background-color: lightgray;
+}
+

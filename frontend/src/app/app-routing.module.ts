@@ -3,6 +3,8 @@ import { ActivatedRouteSnapshot, CanActivateFn, RouterModule, RouterStateSnapsho
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { AuthGuardService } from './authentication/auth-guard.service';
 import { HomeComponent } from './home/home.component';
+import { UpdateLocationComponent } from './update-location/update-location.component';
+
 
 const IsUserAuthenticated: CanActivateFn =
   (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
@@ -11,6 +13,7 @@ const IsUserAuthenticated: CanActivateFn =
   
 const routes: Routes = [
   { path: 'authentication', component: AuthenticationComponent },
+  { path: 'update-location', component: UpdateLocationComponent },
   { path: '', component: HomeComponent, canActivate: [IsUserAuthenticated] },
 ];
 

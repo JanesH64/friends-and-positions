@@ -23,13 +23,15 @@ import { environment } from 'src/environments/environment';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { UpdateLocationComponent } from './update-location/update-location.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthenticationComponent,
     NavMenuComponent,
-    HomeComponent
+    HomeComponent,
+    UpdateLocationComponent
   ],
   imports: [
     BrowserModule,

@@ -5,14 +5,39 @@
 
     #top-row{
         display: flex;
-        justify-content: space-around;
         align-items: center;
+
+        #user{
+            display: flex;
+            align-items: center;
+            width: 500px;
+
+            #UserInput{
+                padding-left: 2rem;
+                width: 300px;
+            }
+        }
     }
 
     #bottom-row{
         display: flex;
         #userTable{
+            width: 500px;
+            table{
+                width: 100%;
+            }
             #headerRow{
+                background-color: #e9e5e5;
+                height: 50px;
+                #number{
+                    width: 25%;
+                }
+                #user{
+                    width: 50%;
+                }
+                #deselect{
+                    width: 25%;
+                }
             }
         }
     }

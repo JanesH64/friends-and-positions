@@ -1,4 +1,7 @@
 
+.titel{
+    
+}
 .update-location-container {
     padding-top: 10%;
     padding-left: 15%;
@@ -48,4 +51,10 @@
 .non-editable{
     background-color: lightgray;
 }
+
+#map {
+    width: 75%;
+    height: 500px;
+    padding: 0;
+  }
 

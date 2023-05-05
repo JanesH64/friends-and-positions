@@ -1,5 +1,9 @@
-<div class="update-location-container">
+<div class="flex-container">
+    <img class="titel" src="">
+    <h2>UPDATE LOCATION</h2>
+</div>
 
+<div class="update-location-container">
     <div class="update-location-leftside">
 
         <div class="update-location-information">
@@ -39,23 +43,11 @@
                 Abbrechen
             </button>
 
-            <a *ngIf="isUserAuthenticated()" mat-icon-button [matTooltip]="'Logout'" (click)="logout()">
-                <mat-icon color="warn">logout</mat-icon>
-            </a>
-
         </div>
 
     </div>
 
-    <div class="update-location-rightside">
-
-        <div class="update-location-error-message">
-            space for error messages
-        </div>
-
-        <div class="update-location-map">
-            Map
-        </div>
+    <div id="map"class="update-location-rightside update-location-map">
 
     </div>
 

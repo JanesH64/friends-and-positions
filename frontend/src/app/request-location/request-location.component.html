@@ -1,0 +1,36 @@
+
+<div id="request-location">
+    <div id="top-row">
+        <div id="user">
+            <p>Benutzerkennung:</p>
+            
+            <mat-form-field id="UserInput" (keyup)="this.catchEnterKey($event, username.value)">
+                <mat-label>Name</mat-label>
+                <input type="text" matInput #username>            
+            </mat-form-field>
+        </div>    
+        <button mat-raised-button (click)="this.addUser(username.value)">Hinzufügen</button>
+    </div>
+    <div id="bottom-row">
+        <div id="userTable">
+            <table mat-table>
+                <tr id="headerRow">
+                    <th id="number">Nr.</th>
+                    <th id="user">Benutzer-ID</th>
+                    <th id="deselect"></th>
+                </tr>
+                <tr *ngFor="let user of users; let i = index">
+                    <th>{{this.i+1}}</th>
+                    <th>{{user.loginName}}</th>
+                    <th>
+                        <button mat-icon-button (click)="this.removeUser(this.user)">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </th>
+                </tr>
+            </table>
+        </div>
+        <div id="map"></div>
+    </div>
+
+</div>

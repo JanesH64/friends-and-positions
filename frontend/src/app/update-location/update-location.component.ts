@@ -94,12 +94,11 @@ export class UpdateLocationComponent implements OnInit {
 
     
       this.updateLocationService.getLocation().subscribe((response) => {
-        if ( response.ergebnis != undefined && response.ergebnis == false ){
+        if ( response.ergebnis != undefined && response.ergebnis == false  && response.breitengrad && response.laengengrad && username){
           let latitude  = response.breitengrad;
           let longitude  = response.laengengrad;
-          // setzen der Werte auf der Karte
+          this.updateMarkerOnMap(latitude, longitude, username);
         }
-
       });
   }
 
@@ -117,6 +116,29 @@ export class UpdateLocationComponent implements OnInit {
     })
   }
 
+  updateMarkerOnMap(pLat: number, pLon: number, name: string){
+    this.map.remove();
+    this.markers.forEach(marker => {
+      this.map.removeLayer(marker);
+    });
+
+    let marker = Leaflet.marker({lat: pLat, lng: pLon}).bindPopup(name);
+    this.markers.push(marker);
+
+    let layerGroup = new Leaflet.LayerGroup(this.markers);
+
+    let map = Leaflet.map('map').setView([pLat, pLon], 10);
+    this.map = map;
+    Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    layerGroup.addTo(this.map);
+    this.markers.push(marker);
+  }
+
+
+
   updateLocation() {
     console.log("Update Location")
     let country = this.updateLocationForm.controls["country"].value
@@ -132,24 +154,30 @@ export class UpdateLocationComponent implements OnInit {
             this.notificationService.error("No City found for Postalcode!");
           }, 1500);
         } else if ( response.breitengrad != null && response.laengengrad != null){
-          let breitengrad = response.breitengrad;
-          let laengengrad = response.laengengrad;
-          this.updateLocationService.updateLocation(breitengrad, laengengrad ).subscribe((response) => {
+          let latitude = response.breitengrad;
+          let longitude = response.laengengrad;
+          this.updateLocationService.updateLocation(latitude, longitude ).subscribe((response) => {
             // TODO bearbeiten der Response
             if ( response.ergebnis != undefined && response.ergebnis == false ){
               setTimeout(() => {
                 this.notificationService.error("Your location could not be updated!");
               }, 1500);
             } else{
-              // TODO setzen der Koordinaten auf der Karte
-              console.log("#3 succeed" ,breitengrad, " - ", laengengrad)
-              this.updateLocationForm.controls["postalcode"].setValue("");
-              this.updateLocationForm.controls["city"].setValue("");
-              this.updateLocationForm.controls["street"].setValue("");
-              this.updateLocationForm.controls["country"].setValue("");
-              setTimeout(() => {
-                this.notificationService.success("Your location has been updated!");
-              }, 1500);
+              let username = this.dataService.user?.loginName;
+              
+              if ( response.ergebnis != undefined && !response.ergebnis && username ){
+                
+                this.updateMarkerOnMap(latitude, longitude, username);
+              
+                this.updateLocationForm.controls["postalcode"].setValue("");
+                this.updateLocationForm.controls["city"].setValue("");
+                this.updateLocationForm.controls["street"].setValue("");
+                this.updateLocationForm.controls["country"].setValue("");
+                
+                setTimeout(() => {
+                  this.notificationService.success("Your location has been updated!");
+                }, 1500);
+              }
             }
           });
         } else {

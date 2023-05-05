@@ -1,6 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { RequestLocationService } from './request-location.service';
 import * as Leaflet from 'leaflet';
+import { NotificationService } from '../common/notification/notification.service';
 //import "leaflet/dist/images"
 
 @Component({
@@ -23,7 +24,8 @@ export class RequestLocationComponent implements AfterViewInit {
 
 
   constructor(
-    private requestLocationService: RequestLocationService
+    private requestLocationService: RequestLocationService,
+    private notificationService: NotificationService
   ){ 
   }
 
@@ -61,8 +63,8 @@ export class RequestLocationComponent implements AfterViewInit {
           });        
           this.addMarkerToMap(result.standort.breitengrad,result.standort.laengengrad,searchString);
         }else{
-          console.log("Location not found!");
-          window.alert("Location not found!");
+          console.error("Location not found!");
+          this.notificationService.error("Location not found!");
         }
       })
     }

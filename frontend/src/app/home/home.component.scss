@@ -18,6 +18,15 @@
     margin: 20px;
 }
 
+.text-container span {
+    margin: 6px;
+    user-select: none;
+}
+
+.subtitle {
+    color: #3874cf;
+}
+
 .spacer {
     margin: 20px;
 }
@@ -34,4 +43,5 @@
     bottom: 30%;
     z-index: -1;
     height: 20vw;
+    user-select: none;
 }

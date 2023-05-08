@@ -23,6 +23,8 @@ import { environment } from 'src/environments/environment';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { RequestLocationComponent } from './request-location/request-location.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { UpdateLocationComponent } from './update-location/update-location.component';
 
 @NgModule({
@@ -31,6 +33,7 @@ import { UpdateLocationComponent } from './update-location/update-location.compo
     AuthenticationComponent,
     NavMenuComponent,
     HomeComponent,
+    RequestLocationComponent
     UpdateLocationComponent
   ],
   imports: [
@@ -52,7 +55,8 @@ import { UpdateLocationComponent } from './update-location/update-location.compo
     RecaptchaModule,
     RecaptchaFormsModule,
     MatDividerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    LeafletModule
   ],
   providers: [
   ],

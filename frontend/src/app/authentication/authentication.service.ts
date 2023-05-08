@@ -35,7 +35,7 @@ export class AuthenticationService {
   }
 
   getCityFromPostalCode(postcode: string) {
-    return this.httpClient.get<PostalCodeResponse>(`/api/getOrt?postalcode=${postcode}&username=advancedinternettech`);
+    return this.httpClient.get<PostalCodeResponse>(`http://api.geonames.org/postalCodeSearchJSON?postalcode=${postcode}&username=advancedinternettech`);
   }
 
   logout() {

@@ -33,7 +33,7 @@ import { UpdateLocationComponent } from './update-location/update-location.compo
     AuthenticationComponent,
     NavMenuComponent,
     HomeComponent,
-    RequestLocationComponent
+    RequestLocationComponent,
     UpdateLocationComponent
   ],
   imports: [

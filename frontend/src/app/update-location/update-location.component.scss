@@ -3,10 +3,9 @@
     
 }
 .update-location-container {
-    padding-top: 20px;
-    padding-left: 15%;
-    padding-right: 15%;
-    display: flex
+    padding: 20px 40px;
+    display: flex;
+    gap: 28px
 }
 
 
@@ -48,20 +47,15 @@
     gap: 18px;
 }
 
-
-.non-editable{
-    // background-color: lightgray;
-}
-
 .heading {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
+    margin: 20px;
 }
 
 #map {
-    width: 75%;
+    width: 50%;
     height: 500px;
     padding: 0;
   }

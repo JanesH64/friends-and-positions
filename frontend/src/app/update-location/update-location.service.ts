@@ -6,6 +6,7 @@ import { DataService } from '../common/data/data.service';
 import { ApiBody } from '../models/apiBody';
 import { PostalCodeResponse2 } from '../models/postalCodeResponse2';
 import { Location } from '../models/location';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -23,17 +24,17 @@ export class UpdateLocationService {
     return this.httpClient.get<PostalCodeResponse2>(`/api/getOrt?postalcode=${postcode}&username=${loginName}`);
   }
 
-  getLocation(){
+  getLocation(): any{
     let user = this.dataService.user;
     let sessionId = user?.sitzung;
     let loginName = user?.loginName;
     // TODO anpassen des Response Objektes
-    return this.httpClient.get<Location>(`/api/getStandort?login=${loginName}&session=${sessionId}&id=${loginName}`);
+    return this.httpClient.get(`/api/getStandort?login=${loginName}&session=${sessionId}&id=${loginName}`);
   }
 
   getLocationByAddress(country: string, postalcode: string, city: string, street: string){
     // TODO anpassen des Response Objektes
-    return this.httpClient.get<Location>(`/api/getStandortPerAdresse?land=${country}&plz=${postalcode}&ort=${city}&strasse=${street}`);
+    return this.httpClient.get<any>(`/api/getStandortPerAdresse?land=${country}&plz=${postalcode}&ort=${city}&strasse=${street}`);
   }
 
   updateLocation(pLat: number, pLon: number){

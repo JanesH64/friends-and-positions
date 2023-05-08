@@ -6,6 +6,7 @@ import { DataService } from '../common/data/data.service';
 import { UpdateLocationService } from './update-location.service';
 import * as Leaflet from 'leaflet';
 import { NotificationService } from '../common/notification/notification.service';
+import { User } from '../models/user';
 
 @Component({
   selector: 'app-update-location',
@@ -36,9 +37,6 @@ export class UpdateLocationComponent implements OnInit {
     this.authenticationService.logout();
   }
 
-  
-
-
   updateLocationForm = this.formBuilder.group({
     username: new FormControl({value:'', disabled: true}, [
     ]),
@@ -59,11 +57,7 @@ export class UpdateLocationComponent implements OnInit {
   ngOnInit(): void {
     console.log("load Update Location")
 
-    let username = this.dataService.user?.loginName;
-
-    if (username) {
-      this.updateLocationForm.controls["username"].setValue(username);
-    }
+    this.initializeFormControl();
 
     let map = Leaflet.map('map').setView([51.8392323, 6.6512868], 10);
     this.map = map;
@@ -92,11 +86,14 @@ export class UpdateLocationComponent implements OnInit {
       });
 
     
-      this.updateLocationService.getLocation().subscribe((response) => {
-        if ( response.ergebnis != undefined && response.ergebnis == false  && response.breitengrad && response.laengengrad && username){
-          let latitude  = response.breitengrad;
-          let longitude  = response.laengengrad;
-          this.updateMarkerOnMap(latitude, longitude, username);
+      this.updateLocationService.getLocation().subscribe((response: any) => {
+        console.log(response);
+        if(response?.ergebnis === false) return;
+
+        if (response.standort.breitengrad && response.standort.laengengrad && this.dataService.user?.loginName){
+          let latitude  = response.standort.breitengrad;
+          let longitude  = response.standort.laengengrad;
+          this.updateMarkerOnMap(latitude, longitude, this.dataService.user?.loginName);
         }
       });
   }
@@ -117,9 +114,8 @@ export class UpdateLocationComponent implements OnInit {
 
   updateMarkerOnMap(pLat: number, pLon: number, name: string){
     this.map.remove();
-    this.markers.forEach(marker => {
-      this.map.removeLayer(marker);
-    });
+
+    this.markers = [];
 
     let marker = Leaflet.marker({lat: pLat, lng: pLon}).bindPopup(name);
     this.markers.push(marker);
@@ -133,7 +129,6 @@ export class UpdateLocationComponent implements OnInit {
     }).addTo(map);
 
     layerGroup.addTo(this.map);
-    this.markers.push(marker);
   }
 
 
@@ -163,15 +158,14 @@ export class UpdateLocationComponent implements OnInit {
               }, 1500);
             } else{
               let username = this.dataService.user?.loginName;
+
+              if(!response?.ergebnis) return;
               
-              if ( response.ergebnis != undefined && !response.ergebnis && username ){
+              if (username ){
                 
                 this.updateMarkerOnMap(latitude, longitude, username);
-              
-                this.updateLocationForm.controls["postalcode"].setValue("");
-                this.updateLocationForm.controls["city"].setValue("");
-                this.updateLocationForm.controls["street"].setValue("");
-                this.updateLocationForm.controls["country"].setValue("");
+
+                this.initializeFormControl();
                 
                 setTimeout(() => {
                   this.notificationService.success("Your location has been updated!");
@@ -191,5 +185,12 @@ export class UpdateLocationComponent implements OnInit {
       }, 1500);
     }
   
+  }
+
+  private initializeFormControl() {
+    this.updateLocationForm.reset();
+    if(!this.dataService.user?.loginName) return;
+
+    this.updateLocationForm.get("username")?.setValue(this.dataService.user?.loginName);
   }
 }

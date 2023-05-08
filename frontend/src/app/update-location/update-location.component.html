@@ -1,13 +1,13 @@
+<div class="heading">
+    <h1>Update location</h1>
+</div>
 <div class="update-location-container">
     <div class="update-location-leftside">
-        <div class="heading">
-            <h1>Update location</h1>
-        </div>
         <div class="update-location-information">
             <form [formGroup]="updateLocationForm" class="flex-container form-field">
                 <mat-form-field class="full-width whole-line" appearance="outline">
                     <mat-label>Username</mat-label>
-                    <input class="non-editable" matInput formControlName="username" >
+                    <input class="non-editable" matInput formControlName="username">
                 </mat-form-field>
                 <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Postalcode</mat-label>
@@ -30,11 +30,12 @@
 
         <div class="action-buttons">
 
-            <button (click)="updateLocation()" [disabled]="updateLocationForm.invalid" mat-raised-button color="primary">
+            <button (click)="updateLocation()" [disabled]="updateLocationForm.invalid" mat-raised-button
+                color="primary">
                 <mat-icon>location_on</mat-icon>
-                            Save
+                Save
             </button>
-       
+
             <button mat-raised-button [routerLink]="''">
                 <mat-icon>home</mat-icon>
                 Cancel
@@ -43,9 +44,5 @@
         </div>
 
     </div>
-
-    <!-- <div id="map"class="update-location-rightside update-location-map">
-
-    </div> -->
-
+    <div id="map"></div>
 </div>

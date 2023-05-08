@@ -14,7 +14,7 @@ const IsUserAuthenticated: CanActivateFn =
   
 const routes: Routes = [
   { path: 'authentication', component: AuthenticationComponent },
-  { path: 'update-location', component: UpdateLocationComponent },
+  { path: 'update-location', component: UpdateLocationComponent, canActivate: [IsUserAuthenticated] },
   { path: '', component: HomeComponent, canActivate: [IsUserAuthenticated] },
   { path: 'request-location', component: RequestLocationComponent, canActivate: [IsUserAuthenticated]},
 ];

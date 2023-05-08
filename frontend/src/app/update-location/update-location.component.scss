@@ -3,7 +3,7 @@
     
 }
 .update-location-container {
-    padding-top: 10%;
+    padding-top: 20px;
     padding-left: 15%;
     padding-right: 15%;
     display: flex
@@ -20,8 +20,9 @@
 
 }
 .action-buttons {
-
-
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
 }
 
 .update-location-rightside {
@@ -49,7 +50,14 @@
 
 
 .non-editable{
-    background-color: lightgray;
+    // background-color: lightgray;
+}
+
+.heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
 #map {
@@ -58,3 +66,6 @@
     padding: 0;
   }
 
+.non-editable {
+    cursor: not-allowed !important;
+}

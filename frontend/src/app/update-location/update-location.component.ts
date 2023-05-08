@@ -40,8 +40,7 @@ export class UpdateLocationComponent implements OnInit {
 
 
   updateLocationForm = this.formBuilder.group({
-    username: new FormControl('', [
-      Validators.required,
+    username: new FormControl({value:'', disabled: true}, [
     ]),
     postalcode: new FormControl('', [
       Validators.required,

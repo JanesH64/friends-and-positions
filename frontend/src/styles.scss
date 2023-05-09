@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Provide sufficient contrast against white background */
+@import 'styles/material-icons.scss';
+@import 'styles/roboto.scss';
+
 a {
   color: #0366d6;
 }

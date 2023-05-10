@@ -1,5 +1,7 @@
 export interface LocationDetails {
-    breitengrad: number | null;
-    laengengrad: number | null;
+    standort: {
+        breitengrad: number | null,
+        laengengrad: number | null
+    }
     ergebnis: boolean | null;
 }

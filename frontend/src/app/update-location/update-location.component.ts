@@ -17,17 +17,15 @@ export class UpdateLocationComponent implements OnInit {
 
   private debounce = 300;
 
-
   map: any;
-
-  markers:  Leaflet.Marker[] = [];
+  markers: Leaflet.Marker[] = [];
 
   constructor(
     private authenticationService: AuthenticationService,
     private notificationService: NotificationService,
     private updateLocationService: UpdateLocationService,
     private dataService: DataService,
-    private formBuilder: FormBuilder) {}
+    private formBuilder: FormBuilder) { }
 
   isUserAuthenticated(): boolean {
     return this.dataService.user?.sitzung !== undefined;
@@ -37,8 +35,9 @@ export class UpdateLocationComponent implements OnInit {
     this.authenticationService.logout();
   }
 
+  // create form to update the location
   updateLocationForm = this.formBuilder.group({
-    username: new FormControl({value:'', disabled: true}, [
+    username: new FormControl({ value: '', disabled: true }, [
     ]),
     postalcode: new FormControl('', [
       Validators.required,
@@ -59,73 +58,93 @@ export class UpdateLocationComponent implements OnInit {
 
     this.initializeFormControl();
 
-    let map = Leaflet.map('map').setView([51.8392323, 6.6512868], 10);
-    this.map = map;
-    Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    Leaflet.Icon.Default.imagePath = "assets/leaflet/"
-
-
-
-    //this.requestLocationService.setLocation("hansi",52.0255391,6.8305445).subscribe();
-
-    
+    // listen for input for the postal code 
     this.updateLocationForm.get('postalcode')?.valueChanges.pipe(debounceTime(this.debounce), distinctUntilChanged())
       .subscribe(postalCode => {
         if (!postalCode) {
+          // empty the city when the plz was removed
           this.updateLocationForm.controls["city"].setValue("");
           return;
         }
-        const germanPostalCodePattern = /^[0-9]{5}$/;
 
-        if (germanPostalCodePattern.test(postalCode)){
+        // determine the city for the zip code if it is a german postal code
+        const germanPostalCodePattern = /^[0-9]{5}$/;
+        if (germanPostalCodePattern.test(postalCode)) {
           this.onPostalCodeEntered(postalCode);
         }
       });
 
-    
-      this.updateLocationService.getLocation().subscribe((response: any) => {
-        console.log(response);
-        if(response?.ergebnis === false) return;
+    // get the current location of the user
+    this.updateLocationService.getLocation().subscribe((response) => {
 
-        if (response.standort.breitengrad && response.standort.laengengrad && this.dataService.user?.loginName){
-          let latitude  = response.standort.breitengrad;
-          let longitude  = response.standort.laengengrad;
-          this.updateMarkerOnMap(latitude, longitude, this.dataService.user?.loginName);
+      if (response?.ergebnis === false) { 
+        // If no location is stored load the current location of the user from the geodata of the browser
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            this.initializeMap(position.coords.longitude, position.coords.latitude);
+            console.log("Latitude: " + position.coords.latitude);
+            console.log("Longitude: " + position.coords.longitude);
+            return;
+          });
+        } else {
+          // set default location to address of WHS Bocholt
+          this.initializeMap(6.651767759445426, 51.83976517573082);
+          console.log("Geolocation is not supported by this browser.");
+          return;
         }
-      });
+
+      } else if (response.standort.breitengrad && response.standort.laengengrad && this.dataService.user?.loginName) {
+        // set the current location of the user on the map
+        let latitude = response.standort.breitengrad;
+        let longitude = response.standort.laengengrad;
+        this.initializeMap(latitude, longitude);
+        this.updateMarkerOnMap(latitude, longitude, this.dataService.user?.loginName);
+      } else {
+        // set default location to address of WHS Bocholt
+        this.initializeMap(6.651767759445426, 51.83976517573082);
+        return;
+      }
+    });
   }
 
+  
+
   onPostalCodeEntered(postalcode: string) {
-    // TODO - springt hier immer rein, dadurch kommt die Fehlermeldung hoch, sollte erst wenn Eingabe fertig ist
     this.updateLocationService.getCityFromPostalCode(postalcode.trim()).subscribe((response) => {
-        if ( response.ergebnis != undefined && response.ergebnis == false ){
-          this.updateLocationForm.controls["city"].setValue("");
-          setTimeout(() => {
-            this.notificationService.error("No City found for Postalcode!");
-          }, 1500);
-        } else {
-          this.updateLocationForm.controls["city"].setValue(response.name);
-        }
+      if (response?.ergebnis === false) {
+        this.updateLocationForm.controls["city"].setValue("");
+        this.showErroMessage("No City found for Postalcode!");
+      } else {
+        this.updateLocationForm.controls["city"].setValue(response.name);
+      }
     })
   }
 
-  updateMarkerOnMap(pLat: number, pLon: number, name: string){
-    this.map.remove();
+  initializeMap(latitude: number, longitude: number) {
+    // initialize the map
+    let map = Leaflet.map('map').setView([longitude, latitude], 16);
+    this.map = map;
+    Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
+    Leaflet.Icon.Default.imagePath = "assets/leaflet/"
+  }
+
+  updateMarkerOnMap(pLat: number, pLon: number, name: string) {
+    // update the marker on the map
+    this.map.remove();
     this.markers = [];
 
-    let marker = Leaflet.marker({lat: pLat, lng: pLon}).bindPopup(name);
+    let marker = Leaflet.marker({ lat: pLat, lng: pLon }).bindPopup(name);
     this.markers.push(marker);
 
     let layerGroup = new Leaflet.LayerGroup(this.markers);
 
-    let map = Leaflet.map('map').setView([pLat, pLon], 10);
+    let map = Leaflet.map('map').setView([pLat, pLon], 16);
     this.map = map;
     Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     layerGroup.addTo(this.map);
@@ -135,62 +154,65 @@ export class UpdateLocationComponent implements OnInit {
 
   updateLocation() {
     console.log("Update Location")
+
+    // get the specified location information
     let country = this.updateLocationForm.controls["country"].value
     let postalcode = this.updateLocationForm.controls["postalcode"].value
     let city = this.updateLocationForm.controls["city"].value
     let street = this.updateLocationForm.controls["street"].value
 
-    if (country != null && postalcode != null  && city != null && street != null ){
-      this.updateLocationService.getLocationByAddress(country, postalcode.trim(), city, street ).subscribe((response) => {
-        if ( response.ergebnis != undefined && response.ergebnis == false ){
-          this.updateLocationForm.controls["city"].setValue("");
-          setTimeout(() => {
-            this.notificationService.error("No City found for Postalcode!");
-          }, 1500);
-        } else if ( response.breitengrad != null && response.laengengrad != null){
+    if (country != null && postalcode != null && city != null && street != null) {
+      // get the address from the location information
+      this.updateLocationService.getLocationByAddress(country, postalcode.trim(), city, street).subscribe((response) => {
+        if (response?.ergebnis === false) {
+          this.showErroMessage("The geo-information could not be determined from the supplied data!");
+        } else if (response.breitengrad != null && response.laengengrad != null) {
           let latitude = response.breitengrad;
           let longitude = response.laengengrad;
-          this.updateLocationService.updateLocation(latitude, longitude ).subscribe((response) => {
-            // TODO bearbeiten der Response
-            if ( response.ergebnis != undefined && response.ergebnis == false ){
-              setTimeout(() => {
-                this.notificationService.error("Your location could not be updated!");
-              }, 1500);
-            } else{
+          // update the location of the user
+          this.updateLocationService.updateLocation(latitude, longitude).subscribe((response) => {
+            if (response?.ergebnis === false) {
+              this.showErroMessage("Your location could not be updated!");
+            } else {
               let username = this.dataService.user?.loginName;
 
-              if(!response?.ergebnis) return;
-              
-              if (username ){
-                
+              if (username) {
+                // update the location on the map and reset the form
                 this.updateMarkerOnMap(latitude, longitude, username);
-
                 this.initializeFormControl();
-                
-                setTimeout(() => {
-                  this.notificationService.success("Your location has been updated!");
-                }, 1500);
+                this.showSuccessMessage("Your location has been updated!");
+              } else{
+                this.showErroMessage("Your location could not be shwown because your user session is not available!");
               }
             }
           });
         } else {
-          setTimeout(() => {
-            this.notificationService.error("Your location could not be determined by the service!");
-          }, 1500);
+          this.showErroMessage("Your location could not be determined by the service!");
         }
       });
-    } else{
-      setTimeout(() => {
-        this.notificationService.error("The new location was not fully specified. Please check the form!");
-      }, 1500);
+    } else {
+      this.showErroMessage("The new location was not fully specified. Please check the form!");
     }
-  
+
   }
 
   private initializeFormControl() {
     this.updateLocationForm.reset();
-    if(!this.dataService.user?.loginName) return;
-
+    if (!this.dataService.user?.loginName) return;
+    // set the user name
     this.updateLocationForm.get("username")?.setValue(this.dataService.user?.loginName);
   }
+
+  private showErroMessage(text: string) {
+    setTimeout(() => {
+      this.notificationService.error(text);
+    }, 1500);
+  }
+
+  private showSuccessMessage(text: string) {
+    setTimeout(() => {
+      this.notificationService.success(text);
+    }, 1500);
+  }
 }
+

@@ -17,8 +17,8 @@ export class UpdateLocationComponent implements OnInit {
 
   private debounce = 300;
 
-  map: any;
-  markers: Leaflet.Marker[] = [];
+  updateLocationMap: any;
+  updateLocationMarkers: Leaflet.Marker[] = [];
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -75,17 +75,20 @@ export class UpdateLocationComponent implements OnInit {
       });
 
     // get the current location of the user
-    this.updateLocationService.getLocation().subscribe((response) => {
+    this.updateLocationService.getLocation().subscribe((response : any) => {
 
-      if (response?.ergebnis === false) { 
+      if (response?.ergebnis == false) { 
+        console.log("Test")
         // If no location is stored load the current location of the user from the geodata of the browser
         if ("geolocation" in navigator) {
+          console.log("Test1")
           navigator.geolocation.getCurrentPosition((position) => {
             let username = this.dataService.user?.loginName;
             if( username ){
-              this.updateMarkerOnMap(position.coords.longitude, position.coords.latitude, username);
+              this.initializeMap(position.coords.latitude, position.coords.longitude);
+              this.updateMarkerOnMap( position.coords.latitude,position.coords.longitude, username);
             } else {
-              this.initializeMap(position.coords.longitude, position.coords.latitude);
+              this.initializeMap(position.coords.latitude, position.coords.longitude);
             }
           
             console.log("Latitude: " + position.coords.latitude);
@@ -94,7 +97,7 @@ export class UpdateLocationComponent implements OnInit {
           });
         } else {
           // set default location to address of WHS Bocholt
-          this.initializeMap(6.651767759445426, 51.83976517573082);
+          this.initializeMap(51.83976517573082, 6.651767759445426);
           console.log("Geolocation is not supported by this browser.");
           return;
         }
@@ -107,7 +110,7 @@ export class UpdateLocationComponent implements OnInit {
         this.updateMarkerOnMap(latitude, longitude, this.dataService.user?.loginName);
       } else {
         // set default location to address of WHS Bocholt
-        this.initializeMap(6.651767759445426, 51.83976517573082);
+        this.initializeMap(51.83976517573082, 6.651767759445426);
         return;
       }
     });
@@ -128,8 +131,8 @@ export class UpdateLocationComponent implements OnInit {
 
   initializeMap(latitude: number, longitude: number) {
     // initialize the map
-    let map = Leaflet.map('map').setView([longitude, latitude], 16);
-    this.map = map;
+    let map = Leaflet.map('updateLocationMap').setView([longitude, latitude], 16);
+    this.updateLocationMap = map;
     Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
@@ -139,21 +142,21 @@ export class UpdateLocationComponent implements OnInit {
 
   updateMarkerOnMap(pLat: number, pLon: number, name: string) {
     // update the marker on the map
-    this.map.remove();
-    this.markers = [];
+    this.updateLocationMap.remove();
+    this.updateLocationMarkers = [];
 
     let marker = Leaflet.marker({ lat: pLat, lng: pLon }).bindPopup(name);
-    this.markers.push(marker);
+    this.updateLocationMarkers.push(marker);
 
-    let layerGroup = new Leaflet.LayerGroup(this.markers);
+    let layerGroup = new Leaflet.LayerGroup(this.updateLocationMarkers);
 
-    let map = Leaflet.map('map').setView([pLat, pLon], 16);
-    this.map = map;
+    let map = Leaflet.map('updateLocationMap').setView([pLat, pLon], 16);
+    this.updateLocationMap = map;
     Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    layerGroup.addTo(this.map);
+    layerGroup.addTo(this.updateLocationMap);
   }
 
 

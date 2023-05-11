@@ -69,9 +69,9 @@ export class UpdateLocationComponent implements OnInit {
 
         // determine the city for the zip code if it is a german postal code
         const germanPostalCodePattern = /^[0-9]{5}$/;
-        if (germanPostalCodePattern.test(postalCode)) {
+        //if (germanPostalCodePattern.test(postalCode)) {
           this.onPostalCodeEntered(postalCode);
-        }
+        //}
       });
 
     // get the current location of the user
@@ -81,7 +81,13 @@ export class UpdateLocationComponent implements OnInit {
         // If no location is stored load the current location of the user from the geodata of the browser
         if ("geolocation" in navigator) {
           navigator.geolocation.getCurrentPosition((position) => {
-            this.initializeMap(position.coords.longitude, position.coords.latitude);
+            let username = this.dataService.user?.loginName;
+            if( username ){
+              this.updateMarkerOnMap(position.coords.longitude, position.coords.latitude, username);
+            } else {
+              this.initializeMap(position.coords.longitude, position.coords.latitude);
+            }
+          
             console.log("Latitude: " + position.coords.latitude);
             console.log("Longitude: " + position.coords.longitude);
             return;

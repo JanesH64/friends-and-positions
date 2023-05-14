@@ -1,6 +1,6 @@
 <header>
     <mat-toolbar class="toolbar">
-        <a *ngIf="isUserAuthenticated()" mat-icon-button [routerLink]="" [matTooltip]="'Update location'">
+        <a *ngIf="isUserAuthenticated()" mat-icon-button [routerLink]="'/update-location'" [matTooltip]="'Update location'">
             <mat-icon>edit_location</mat-icon>
         </a>
         <a *ngIf="isUserAuthenticated()" mat-icon-button [routerLink]="'request-location'" [matTooltip]="'Request location'">

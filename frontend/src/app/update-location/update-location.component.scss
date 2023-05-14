@@ -1,0 +1,43 @@
+
+.update-location-container {
+    padding: 20px 40px;
+    display: flex;
+    gap: 28px
+}
+
+.update-location-information {
+    flex: 6;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.spacer {
+    margin: 20px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    gap: 18px;
+}
+
+.heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+}
+
+#updateLocationMap {
+    width: 50%;
+    height: 500px;
+    padding: 0;
+  }
+
+.non-editable {
+    cursor: not-allowed !important;
+}

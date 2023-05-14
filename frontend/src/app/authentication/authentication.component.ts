@@ -21,6 +21,7 @@ export class AuthenticationComponent implements OnInit {
     ]),
     password: new FormControl('', [
       Validators.required,
+      Validators.minLength(8)
     ]),
     confirmPassword: new FormControl('', [
       Validators.required,

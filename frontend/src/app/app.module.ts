@@ -25,6 +25,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { RequestLocationComponent } from './request-location/request-location.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { UpdateLocationComponent } from './update-location/update-location.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     AuthenticationComponent,
     NavMenuComponent,
     HomeComponent,
-    RequestLocationComponent
+    RequestLocationComponent,
+    UpdateLocationComponent
   ],
   imports: [
     BrowserModule,

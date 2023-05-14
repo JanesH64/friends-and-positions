@@ -1,0 +1,48 @@
+<div class="heading">
+    <h1>Update location</h1>
+</div>
+<div class="update-location-container">
+    <div class="update-location-information">
+        <div>
+            <form [formGroup]="updateLocationForm" class="flex-container form-field">
+                <mat-form-field class="full-width whole-line" appearance="outline">
+                    <mat-label>Username</mat-label>
+                    <input class="non-editable" matInput formControlName="username">
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Postalcode</mat-label>
+                    <input matInput formControlName="postalcode">
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>City</mat-label>
+                    <input matInput formControlName="city">
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Street</mat-label>
+                    <input matInput formControlName="street">
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-label>Country</mat-label>
+                    <input matInput formControlName="country">
+                </mat-form-field>
+            </form> 
+        </div>
+
+        <div class="action-buttons">
+
+            <button (click)="updateLocation()" [disabled]="updateLocationForm.invalid" mat-raised-button
+                color="primary">
+                <mat-icon>location_on</mat-icon>
+                Save
+            </button>
+
+            <button mat-raised-button [routerLink]="''">
+                <mat-icon>home</mat-icon>
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+    <div id="updateLocationMap"></div>
+</div>

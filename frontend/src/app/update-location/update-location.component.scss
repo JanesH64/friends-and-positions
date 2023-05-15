@@ -41,3 +41,13 @@
 .non-editable {
     cursor: not-allowed !important;
 }
+
+@media screen and (max-width: 700px){
+    .update-location-container {
+        flex-wrap: wrap;
+    }
+
+    #updateLocationMap {
+        width: 100%;
+    }
+}

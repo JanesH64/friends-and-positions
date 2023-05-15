@@ -2,7 +2,8 @@ FROM node:latest AS build
 WORKDIR /frontend
 COPY ./package.json .
 COPY ./package-lock.json .
-RUN npm install
+RUN npm ci
+RUN ngcc
 COPY . .
 RUN npm run build
 

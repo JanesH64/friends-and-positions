@@ -58,4 +58,8 @@ export class AuthenticationService {
       }
     })
   }
+
+  validateSession(username: string, session: string) {
+    return this.httpClient.get<ApiResponse>(`/api/validateSession?login=${username}&session=${session}`)
+  }
 }

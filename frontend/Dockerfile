@@ -3,7 +3,6 @@ WORKDIR /frontend
 COPY ./package.json .
 COPY ./package-lock.json .
 RUN npm ci
-RUN ngcc
 COPY . .
 RUN npm run build
 

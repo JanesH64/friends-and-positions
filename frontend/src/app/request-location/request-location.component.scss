@@ -1,51 +1,58 @@
 #request-location{
-    margin: 15px;
-    padding: 15px;
-    border: 1px solid black;
+    gap: 28px;
 
     #top-row{
         display: flex;
         align-items: center;
+        justify-content: center;
+        margin: 20px;
 
-        #user{
-            display: flex;
-            align-items: center;
-            width: 500px;
-
-            #UserInput{
-                padding-left: 2rem;
-                width: 300px;
-            }
-        }
     }
-
     #bottom-row{
+        padding: 20px 40px;
         display: flex;
-        #userTable{
-            width: 500px;
-            table{
+        justify-content: space-around;
+        width: 100%;
+        #userInfo{
+            width: 33%;
+            #user{
+                display: flex;
+                //align-items: center;
+                justify-content: space-between;
                 width: 100%;
+                .inputButton{
+                    width: 25%;
+                    height: 53px;
+                }
+                #UserInput{                
+                    width: calc(50% - 3px);
+                    height: 75px;
+                }
             }
-            #headerRow{
-                background-color: #e9e5e5;
-                height: 50px;
-                #number{
-                    width: 25%;
-                }
-                #user{
-                    width: 50%;
-                }
-                #deselect{
-                    width: 25%;
+            #userTable{
+                width: 100%;
+                table{
+                    width: 100%;
+                    #headerRow{
+                        background-color: #e9e5e5;
+                        height: 50px;
+                        #number{
+                            width: 25%;
+                        }
+                        #username{
+                            width: 50%;
+                        }
+                        #deselect{
+                            width: 25%;
+                        }
+                    }
                 }
             }
         }
+        #request-location-map {
+            width: 63%;
+            height: 500px;
+            padding: 0;
+          }
     }
-
 }
-
-#map {
-    width: 75%;
-    height: 500px;
-    padding: 0;
-  }

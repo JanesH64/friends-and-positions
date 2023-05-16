@@ -22,6 +22,9 @@ export class RequestLocationComponent implements AfterViewInit {
 
   markers:  Leaflet.Marker[] = [];
 
+  autoReload: boolean = false;
+  reloadColour: string= 'green';
+
 
   constructor(
     private requestLocationService: RequestLocationService,
@@ -30,19 +33,27 @@ export class RequestLocationComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    let map = Leaflet.map('map').setView([51.8392323, 6.6512868], 10);
+    let map = Leaflet.map('request-location-map').setView([51.8392323, 6.6512868], 10);
     this.map = map;
     Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     Leaflet.Icon.Default.imagePath = "assets/leaflet/"
-
+    /*
     this.users.forEach(user=>{
       this.addMarkerToMap(user.standort.breitengrad,user.standort.laengengrad,user.loginName)
-    })
+    })*/
 
-    this.requestLocationService.setLocation("hansi",52.0255391,6.8305445).subscribe();
+    //this.requestLocationService.setLocation("hansi",52.0255391,6.8305445).subscribe();
+
+    //this.requestLocationService.getUser().subscribe(res=> console.log(res));
+
+    setInterval(()=>{
+      if(this.autoReload == true){
+        this.reloadUsers()
+      }
+    },30000)
 
   }
 
@@ -77,11 +88,12 @@ export class RequestLocationComponent implements AfterViewInit {
         "laengengrad": number
     }}){
     let index = this.users.findIndex(tmp => tmp == user);
-    this.users.splice(index,1);
+    this.users.splice(index,1);    
     this.removeMarkerFromMap(user.standort.breitengrad,user.standort.laengengrad,user.loginName)
   }
 
   addMarkerToMap(pLat: number, pLon: number, name: string){
+    console.log(pLat, pLon, name);
     this.map.remove();
     this.markers.forEach(marker => {
       this.map.removeLayer(marker);
@@ -94,22 +106,25 @@ export class RequestLocationComponent implements AfterViewInit {
 
     let viewInfo = this.getViewInformation();
 
-    let map = Leaflet.map('map').setView([viewInfo.lat, viewInfo.lon], viewInfo.zoom);
+    let map = Leaflet.map('request-location-map').setView([viewInfo.lat, viewInfo.lon], viewInfo.zoom);
     this.map = map;
     Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     layerGroup.addTo(this.map);
-    this.markers.push(marker);
   }
 
   removeMarkerFromMap(pLat: number, pLon: number, name: string){
-    this.markers.forEach(marker => {
+    let index = -1;
+    this.markers.forEach((marker) => {
       if(marker.getLatLng().lat == pLat && marker.getLatLng().lng == pLon){
         this.map.removeLayer(marker);
+        index = this.markers.findIndex(tmpmarker => tmpmarker == marker);
       }
     });
+    this.markers.splice(index,1);
+    //console.log(this.markers);
   }
 
   getViewInformation():{lat:number,lon:number,zoom:number}{
@@ -134,6 +149,35 @@ export class RequestLocationComponent implements AfterViewInit {
     //console.log(event)
     if(event.key == "Enter"){
       this.addUser(username)
+    }
+  }
+
+  reloadUsers(){
+    console.log("reload")
+    let changeUsers : any[] = [];
+    this.users.forEach((user, index)=>{
+      let tmpuser = this.requestLocationService.retrieveUserInformation(user.loginName);
+      tmpuser.subscribe((result:any) => {
+        if(result.ergebnis != false){
+          if(result.standort.breitengrad != user.standort.breitengrad && result.standort.laengengrad != user.standort.laengengrad){          
+            console.log("location changed!");
+            this.users[index].standort = result.standort
+            this.removeMarkerFromMap(user.standort.breitengrad, user.standort.laengengrad, user.loginName);
+            this.addMarkerToMap(result.standort.breitengrad, result.standort.laengengrad, user.loginName);
+          }
+        }else{
+          console.error("Location not found!");
+          this.notificationService.error("Location not found!");
+        }
+      })      
+    })
+  }
+
+  setAutoReload(){
+    if(this.autoReload == false){
+      this.autoReload = true;
+    }else if(this.autoReload == true){
+      this.autoReload = false;
     }
   }
 

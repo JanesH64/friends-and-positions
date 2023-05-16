@@ -2,7 +2,7 @@ FROM node:latest AS build
 WORKDIR /frontend
 COPY ./package.json .
 COPY ./package-lock.json .
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run build
 

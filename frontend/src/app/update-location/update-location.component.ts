@@ -17,6 +17,10 @@ export class UpdateLocationComponent implements OnInit {
 
   private debounce = 300;
 
+  liveLocationDisabled: boolean = true;
+  liveLatitude: number = 0;
+  liveLongitude: number = 0;
+
   updateLocationMap: any;
   updateLocationMarkers: Leaflet.Marker[] = [];
 
@@ -73,33 +77,36 @@ export class UpdateLocationComponent implements OnInit {
           this.onPostalCodeEntered(postalCode);
         }
       });
+      
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.liveLocationDisabled = false;
+          this.liveLatitude = position.coords.latitude;
+          this.liveLongitude = position.coords.longitude;
+        }, (errorMsg) => {
+          this.showErroMessage(errorMsg.message + "!");
+        });
+      }
+
+      
 
     // get the current location of the user
     this.updateLocationService.getLocation().subscribe((response : any) => {
-      if (response?.ergebnis == false) { 
-        // If no location is stored load the current location of the user from the geodata of the browser
-        if ("geolocation" in navigator) {
-          navigator.geolocation.getCurrentPosition((position) => {
+      if (response?.ergebnis == false) {       
+        if (!this.liveLocationDisabled) { 
+            // If no location is stored load the current location of the user from the geodata of the browser if available
             let username = this.dataService.user?.loginName;
             if( username ){
-              this.initializeMap(position.coords.latitude, position.coords.longitude);
-              this.updateMarkerOnMap( position.coords.latitude,position.coords.longitude, username);
+              this.initializeMap(this.liveLatitude, this.liveLongitude);
+              this.updateMarkerOnMap(this.liveLatitude, this.liveLongitude, username);
             } else {
-              this.initializeMap(position.coords.latitude, position.coords.longitude);
+              this.initializeMap(this.liveLatitude, this.liveLatitude);
             }
-          
-            console.log("Latitude: " + position.coords.latitude);
-            console.log("Longitude: " + position.coords.longitude);
             return;
-          }, (errorMsg) => {
-            // set default location to address of WHS Bocholt
-            this.initializeMap(6.651767759445426, 51.83976517573082);
-            this.showErroMessage(errorMsg.message + "!");
-          });
+
         } else {
           // set default location to address of WHS Bocholt
           this.initializeMap(6.651767759445426, 51.83976517573082);
-          console.log("Geolocation is not supported by this browser.");
           return;
         }
 
@@ -204,6 +211,29 @@ export class UpdateLocationComponent implements OnInit {
       this.showErroMessage("The new location was not fully specified. Please check the form!");
     }
 
+  }
+
+  updateLocationLive() {
+    console.log("Update location with live location");
+    let latitude = this.liveLatitude;
+    let longitude = this.liveLongitude;
+    // update the location of the user
+    this.updateLocationService.updateLocation(latitude, longitude).subscribe((response) => {
+      if (response?.ergebnis === false) {
+        this.showErroMessage("Your location could not be updated!");
+      } else {
+        let username = this.dataService.user?.loginName;
+
+        if (username) {
+          // update the location on the map and reset the form
+          this.updateMarkerOnMap(latitude, longitude, username);
+          //this.initializeFormControl();
+          this.showSuccessMessage("Your location has been updated!");
+        } else {
+          this.showErroMessage("Your location could not be shwown because your user session is not available!");
+        }
+      }
+    });
   }
 
   private initializeFormControl() {

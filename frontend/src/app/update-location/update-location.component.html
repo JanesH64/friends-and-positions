@@ -36,6 +36,12 @@
                 Save
             </button>
 
+            <button (click)="updateLocationLive()" [disabled]="liveLocationDisabled"  mat-raised-button
+                color="primary">
+                <mat-icon>location_on</mat-icon>
+                Live
+            </button>
+
             <button mat-raised-button [routerLink]="''">
                 <mat-icon>home</mat-icon>
                 Cancel

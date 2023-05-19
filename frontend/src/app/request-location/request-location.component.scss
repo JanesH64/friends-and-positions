@@ -1,5 +1,6 @@
 #request-location{
     gap: 28px;
+    overflow: hidden;
 
     #top-row{
         display: flex;
@@ -20,6 +21,7 @@
                 //align-items: center;
                 justify-content: space-between;
                 width: 100%;
+                column-gap: 8px;
                 .inputButton{
                     width: 25%;
                     height: 53px;
@@ -50,7 +52,7 @@
             }
         }
         #request-location-map {
-            width: 63%;
+            width: 50%;
             height: 500px;
             padding: 0;
           }

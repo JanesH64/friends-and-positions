@@ -91,10 +91,14 @@ export class UpdateLocationComponent implements OnInit {
             console.log("Latitude: " + position.coords.latitude);
             console.log("Longitude: " + position.coords.longitude);
             return;
+          }, (errorMsg) => {
+            // set default location to address of WHS Bocholt
+            this.initializeMap(6.651767759445426, 51.83976517573082);
+            this.showErroMessage(errorMsg.message + "!");
           });
         } else {
           // set default location to address of WHS Bocholt
-          this.initializeMap(51.83976517573082, 6.651767759445426);
+          this.initializeMap(6.651767759445426, 51.83976517573082);
           console.log("Geolocation is not supported by this browser.");
           return;
         }
@@ -107,7 +111,7 @@ export class UpdateLocationComponent implements OnInit {
         this.updateMarkerOnMap(latitude, longitude, this.dataService.user?.loginName);
       } else {
         // set default location to address of WHS Bocholt
-        this.initializeMap(51.83976517573082, 6.651767759445426);
+        this.initializeMap(6.651767759445426, 51.83976517573082);
         return;
       }
     });

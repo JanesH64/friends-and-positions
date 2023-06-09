@@ -1,9 +1,9 @@
 <header>
     <mat-toolbar class="toolbar">
-        <a *ngIf="isUserAuthenticated()" mat-icon-button [routerLink]="'/update-location'" [matTooltip]="'Update location'">
+        <a [disabled]="!isUserAuthenticated()" mat-icon-button [routerLink]="'/update-location'" [matTooltip]="'Update location'">
             <mat-icon>edit_location</mat-icon>
         </a>
-        <a *ngIf="isUserAuthenticated()" mat-icon-button [routerLink]="'request-location'" [matTooltip]="'Request location'">
+        <a [disabled]="!isUserAuthenticated()" mat-icon-button [routerLink]="'request-location'" [matTooltip]="'Request location'">
             <mat-icon>map</mat-icon>
         </a>
         <span class="spacer"></span>
@@ -16,7 +16,7 @@
             <span class="headline headline-end"> P</span>
         </a>
         <span class="spacer"></span>
-        <a *ngIf="isUserAuthenticated()" mat-icon-button [matTooltip]="'Logout'" (click)="logout()">
+        <a [disabled]="!isUserAuthenticated()" mat-icon-button [matTooltip]="'Logout'" (click)="logout()">
             <mat-icon class="logout">logout</mat-icon>
         </a>
     </mat-toolbar>

@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Session } from '../models/session';
 import { Registration } from '../models/registration';
 import { User } from '../models/user';
-import { PostalCodeResponse } from '../models/postalCodeResponse';
+import { Place, PostalCodeResponse } from '../models/postalCodeResponse';
 import { DataService } from '../common/data/data.service';
 import { Router } from '@angular/router';
 import { NotificationService } from '../common/notification/notification.service';
@@ -35,7 +35,7 @@ export class AuthenticationService {
   }
 
   getCityFromPostalCode(postcode: string) {
-    return this.httpClient.get<PostalCodeResponse>(`http://api.geonames.org/postalCodeSearchJSON?postalcode=${postcode}&username=advancedinternettech`);
+    return this.httpClient.get<Place>(`/api/getOrt?postalcode=${postcode}&username=advancedinternettech`);
   }
 
   logout() {

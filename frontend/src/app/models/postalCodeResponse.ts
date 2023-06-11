@@ -3,7 +3,7 @@ export interface PostalCodeResponse {
 }
 
 export interface Place {
-    placeName: string;
-    postalCode: string;
-    countryCode: string;
+    name: string;
+    plz: string;
+    province: string;
 }

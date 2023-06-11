@@ -207,8 +207,8 @@ export class AuthenticationComponent implements OnInit {
 
   onPostalCodeEntered(postalcode: string) {
     this.authenticationService.getCityFromPostalCode(postalcode.trim()).subscribe((response) => {
-      if (response?.postalCodes.length > 0) {
-        this.registrationForm.controls["city"].setValue(response.postalCodes[0].placeName);
+      if (response?.name) {
+        this.registrationForm.controls["city"].setValue(response.name);
       }
     })
   }

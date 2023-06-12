@@ -18,4 +18,4 @@ Users can...
 - Start Angular dev server via ng serve in frontend folder
 
 ## Hosting
-This application is publicly available at: https://friends-and-positions.onrender.com
+This application is publicly available at: https://friends-and-places.janes-horst.de
